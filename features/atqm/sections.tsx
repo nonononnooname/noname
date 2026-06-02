@@ -12,14 +12,14 @@ import {
   PITCH,
 } from "./data";
 import { Reveal } from "./components/reveal";
-import { TopoHero } from "./components/topo-hero";
+import { LatticeHero } from "./components/lattice-hero";
 import { EcosystemOrbit } from "./components/ecosystem-orbit";
 import { PRODUCT_MOCKS } from "./components/mocks";
 import { Section, SectionHeader, Stat, Card } from "./components/primitives";
 
-/* 01 — Hero (3D topographic parallax, ATQM-branded) */
+/* 01 — Hero (animated post-quantum lattice field, ATQM-branded) */
 export function Hero() {
-  return <TopoHero />;
+  return <LatticeHero />;
 }
 
 /* 02 — The Problem (keeps the order/chaos entropy field as its backdrop) */
