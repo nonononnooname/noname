@@ -1,0 +1,129 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/*
+  ATQM brand tokens — STRICT source of truth: Figma "DESIGN SMM" (node 12190-284).
+  Monochrome base (black / white) + a single accent (brand yellow #FFD803), Geologica type.
+  This is a single dark-by-design theme — there is no light mode and no theme toggle.
+  Secondary atmosphere (organic gradients / glow) is inspired by atqm_docs/atqm_DESIGN.md only
+  where Figma leaves a gap.
+*/
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* brand-specific surfaces */
+  --color-surface: var(--surface);
+  --color-brand-yellow: var(--brand-yellow);
+
+  /* typography */
+  --font-sans: var(--font-geologica), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-geologica), ui-sans-serif, system-ui, sans-serif;
+  --font-ui: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+
+  /* radii — Figma: pill buttons/chips, 40–50px cards */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+  --radius-card: 2.5rem; /* 40px */
+  --radius-pill: 9999px;
+}
+
+:root {
+  /* colors — exact Figma brand hex */
+  --background: #000000;
+  --foreground: #ffffff;
+
+  --card: #111111;
+  --card-foreground: #ffffff;
+
+  --popover: #111111;
+  --popover-foreground: #ffffff;
+
+  --primary: #ffd803; /* brand yellow — the ONLY chromatic accent */
+  --primary-foreground: #000000;
+
+  --secondary: #343434;
+  --secondary-foreground: #ffffff;
+
+  --muted: #565656;
+  --muted-foreground: #9d9d9d;
+
+  --accent: #ffd803;
+  --accent-foreground: #000000;
+
+  --destructive: #ff5555;
+  --destructive-foreground: #ffffff;
+
+  --border: rgba(255, 255, 255, 0.12);
+  --input: rgba(255, 255, 255, 0.16);
+  --ring: #ffd803;
+
+  --surface: #343434;
+  --brand-yellow: #ffd803;
+
+  /* gradients & glow — Figma effects */
+  --gradient-text: linear-gradient(90deg, #ffffff 0%, #999999 100%);
+  --gradient-hero: radial-gradient(circle at 14% 16%, #222222 0%, #000000 100%);
+  --gradient-ring: conic-gradient(
+    from 180deg at 50% 50%,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0) 41%,
+    rgba(255, 255, 255, 0) 66%,
+    #ffffff 100%
+  );
+  --glow-yellow: 0 0 1.5px 0 rgba(255, 216, 3, 0.9), 0 1.25px 7.49px rgba(255, 216, 3, 0.8);
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--brand-yellow);
+    color: #000000;
+  }
+}
+
+@utility text-gradient {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+@utility glow-yellow {
+  box-shadow: var(--glow-yellow);
+}
