@@ -5,14 +5,8 @@ import {
   Hero,
   Problem,
   AtqmVsAreth,
-  Substrate,
-  Architecture,
-  CrateMap,
-  Consensus,
-  PqPrimitives,
-  Transactions,
-  Performance,
-  Expansion,
+  Ecosystem,
+  Products,
   Roadmap,
   Pitch,
 } from "@/features/atqm/sections";
@@ -37,16 +31,10 @@ export default function AtqmPage() {
       </div>
       <main>
         <Hero />
-      <Problem />
-      <AtqmVsAreth />
-      <Substrate />
-      <Architecture />
-      <CrateMap />
-      <Consensus />
-      <PqPrimitives />
-      <Transactions />
-      <Performance />
-      <Expansion />
+        <Problem />
+        <AtqmVsAreth />
+        <Ecosystem />
+        <Products />
         <Roadmap />
         <Pitch />
       </main>

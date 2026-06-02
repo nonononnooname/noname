@@ -1,33 +1,21 @@
+import { Check } from "lucide-react";
+
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import { Entropy } from "@/components/ui/entropy";
-import { CrateCarousel } from "./components/crate-carousel";
 
 import {
   PROBLEM,
   ATQM_VS_ARETH,
-  SUBSTRATE,
-  ARCHITECTURE,
-  CONSENSUS,
-  PRIMITIVES,
-  TRANSACTIONS,
-  PERFORMANCE,
-  EXPANSION,
+  ECOSYSTEM,
+  PRODUCTS,
   ROADMAP,
   PITCH,
 } from "./data";
 import { Reveal } from "./components/reveal";
 import { TopoHero } from "./components/topo-hero";
-import {
-  Section,
-  SectionHeader,
-  CodeBlock,
-  Stat,
-  Card,
-  CompareTable,
-  DefinitionTable,
-  Caveat,
-} from "./components/primitives";
+import { EcosystemOrbit } from "./components/ecosystem-orbit";
+import { PRODUCT_MOCKS } from "./components/mocks";
+import { Section, SectionHeader, Stat, Card } from "./components/primitives";
 
 /* 01 — Hero (3D topographic parallax, ATQM-branded) */
 export function Hero() {
@@ -136,342 +124,84 @@ export function AtqmVsAreth() {
   );
 }
 
-/* 04 — Substrate */
-export function Substrate() {
+/* 04 — Ecosystem (the orbital "circle": Areth core + product surfaces) */
+export function Ecosystem() {
   return (
-    <Section id="substrate">
+    <Section id="ecosystem">
       <SectionHeader
         index="04"
-        topic="Kept vs replaced"
-        title="A fork-descendant of Reth — not Reth with patches."
-        intro={SUBSTRATE.intro}
-      />
-      <div className="grid gap-8 lg:grid-cols-2">
-        <Reveal>
-          <div>
-            <p className="mb-4 font-ui text-xs uppercase tracking-wider text-muted-foreground">
-              Kept from Reth
-            </p>
-            <ul className="space-y-px overflow-hidden rounded-card border border-border">
-              {SUBSTRATE.kept.map((k) => (
-                <li
-                  key={k}
-                  className="border-b border-border bg-card px-5 py-3.5 text-sm text-foreground last:border-b-0"
-                >
-                  {k}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </Reveal>
-        <Reveal delay={120}>
-          <div>
-            <p className="mb-4 font-ui text-xs uppercase tracking-wider text-primary">
-              Replaced with PQ-secure equivalents
-            </p>
-            <CompareTable
-              headers={["Ethereum", "Areth"]}
-              rows={SUBSTRATE.replaced}
-            />
-          </div>
-        </Reveal>
-      </div>
-    </Section>
-  );
-}
-
-/* 05 — Architecture */
-export function Architecture() {
-  return (
-    <Section id="architecture">
-      <SectionHeader
-        index="05"
-        topic="Three roles, one transport"
-        title="Every node speaks the same encrypted transport."
-        intro={ARCHITECTURE.intro}
-      />
-      <div className="grid gap-4 sm:grid-cols-3">
-        {ARCHITECTURE.roles.map((r, i) => (
-          <Reveal key={r.name} delay={i * 80}>
-            <Card className="h-full">
-              <h3 className="font-display text-lg">{r.name}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {r.body}
-              </p>
-            </Card>
-          </Reveal>
-        ))}
-      </div>
-      <Reveal delay={160}>
-        <div className="mt-8">
-          <CodeBlock className="text-center text-primary">
-            {ARCHITECTURE.transport}
-          </CodeBlock>
-          <ul className="mt-6 grid gap-3 sm:grid-cols-3">
-            {ARCHITECTURE.transportNotes.map((n) => (
-              <li
-                key={n}
-                className="text-sm leading-relaxed text-muted-foreground"
-              >
-                {n}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Reveal>
-    </Section>
-  );
-}
-
-/* 06 — Crate map (interactive carousel over the nine areth-* crates) */
-export function CrateMap() {
-  return (
-    <Section id="crates">
-      <SectionHeader
-        index="06"
-        topic="Engineering scope"
+        topic="One core, many surfaces"
         title={
           <>
-            The <span className="text-primary">areth-*</span> crate map.
+            The <span className="text-primary">ATOM</span> ecosystem.
           </>
         }
-        intro="Nine focused crates, each replacing one Ethereum protocol surface — with Reth's runtime and storage doing the heavy lifting underneath."
+        intro={ECOSYSTEM.intro}
       />
       <Reveal>
-        <CrateCarousel />
+        <EcosystemOrbit />
       </Reveal>
     </Section>
   );
 }
 
-/* 07 — Consensus */
-export function Consensus() {
+/* 05 — Products (faithful interface mocks from Figma + descriptions) */
+export function Products() {
   return (
-    <Section id="consensus">
+    <Section id="products">
       <SectionHeader
-        index="07"
-        topic="HotStuff finality, signed in ML-DSA"
-        title="Block-bound and deterministic. Never probabilistic."
-        intro={CONSENSUS.intro}
+        index="05"
+        topic="Built on the post-quantum core"
+        title="The product surfaces."
+        intro={PRODUCTS.intro}
       />
-      <Reveal>
-        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-          {CONSENSUS.pipeline.map((step, i) => (
-            <span key={step} className="flex items-center gap-2 sm:gap-3">
-              <span className="rounded-pill border border-border bg-card px-4 py-2 font-ui text-xs uppercase tracking-wider">
-                {step}
-              </span>
-              {i < CONSENSUS.pipeline.length - 1 && (
-                <span aria-hidden className="text-primary">
-                  →
-                </span>
-              )}
-            </span>
-          ))}
-        </div>
-      </Reveal>
-      <div className="mt-10 grid gap-px overflow-hidden rounded-card border border-border sm:grid-cols-2">
-        {CONSENSUS.stats.map((s) => (
-          <div
-            key={s.key}
-            className="flex items-baseline justify-between bg-card px-5 py-4"
-          >
-            <span className="text-sm text-muted-foreground">{s.key}</span>
-            <span className="font-display text-lg text-foreground">
-              {s.value}
-            </span>
-          </div>
-        ))}
-      </div>
-      <Caveat>{CONSENSUS.caveat}</Caveat>
-    </Section>
-  );
-}
-
-/* 08 — PQ primitives */
-export function PqPrimitives() {
-  return (
-    <Section id="primitives">
-      <SectionHeader
-        index="08"
-        topic="Post-quantum primitives"
-        title="NIST-standardized where it counts."
-        intro={PRIMITIVES.intro}
-      />
-      <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
-        <Reveal>
-          <DefinitionTable
-            headers={["Layer", "Primitive"]}
-            rows={PRIMITIVES.rows.map((r) => ({
-              key: r.layer,
-              value: (
-                <span>
-                  <span className="text-foreground">{r.primitive}</span>
-                  <span className="mt-1 block text-xs text-muted-foreground">
-                    {r.status}
-                  </span>
-                </span>
-              ),
-            }))}
-          />
-        </Reveal>
-        <Reveal delay={120}>
-          <div className="space-y-4">
-            {PRIMITIVES.standards.map((s) => (
-              <Card key={s.name} className="p-5">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="font-display text-lg">{s.name}</span>
-                  <Badge variant={s.final ? "default" : "outline"}>
-                    {s.fips}
-                    {s.final ? " ✓" : " · draft"}
-                  </Badge>
+      <div className="space-y-16 sm:space-y-28">
+        {PRODUCTS.items.map((p, i) => {
+          const Mock = PRODUCT_MOCKS[p.key];
+          const flip = i % 2 === 1;
+          return (
+            <Reveal key={p.key}>
+              <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+                <div className={cn("flex justify-center", flip && "lg:order-2")}>
+                  <Mock />
                 </div>
-                <p className="mt-2 text-sm text-muted-foreground">{s.note}</p>
-              </Card>
-            ))}
-            <p className="text-xs leading-relaxed text-muted-foreground">
-              Threshold-of-N accounts are first-class today — multi-device
-              authorization with no smart-contract gymnastics.
-            </p>
-          </div>
-        </Reveal>
-      </div>
-    </Section>
-  );
-}
-
-/* 09 — Transaction model */
-export function Transactions() {
-  return (
-    <Section id="transactions">
-      <SectionHeader
-        index="09"
-        topic="Transaction model"
-        title="Same EVM. Different signature. Cleaner surface."
-        intro={TRANSACTIONS.intro}
-      />
-      <div className="grid gap-4 sm:grid-cols-2">
-        {TRANSACTIONS.features.map((f, i) => (
-          <Reveal key={f.title} delay={i * 70}>
-            <Card className="h-full">
-              <h3 className="font-display text-lg">{f.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {f.body}
-              </p>
-            </Card>
-          </Reveal>
-        ))}
-      </div>
-      <Reveal delay={120}>
-        <div className="mt-10">
-          <p className="mb-4 font-ui text-xs uppercase tracking-wider text-muted-foreground">
-            Signature size — the honest trade-off
-          </p>
-          <div className="grid gap-px overflow-hidden rounded-card border border-border sm:grid-cols-3">
-            {TRANSACTIONS.sizes.map((s) => (
-              <div key={s.algo} className="bg-card px-5 py-5">
-                <div className="font-display text-2xl font-light text-foreground">
-                  {s.sig}
-                </div>
-                <div className="mt-1 font-ui text-xs uppercase tracking-wider text-muted-foreground">
-                  {s.algo}
+                <div className={cn(flip && "lg:order-1")}>
+                  <p className="font-ui text-xs uppercase tracking-[0.25em] text-primary">
+                    {p.tagline}
+                  </p>
+                  <h3 className="mt-3 font-display text-3xl font-light tracking-tight sm:text-4xl">
+                    {p.name}
+                  </h3>
+                  <p className="mt-4 text-base leading-relaxed text-muted-foreground">
+                    {p.body}
+                  </p>
+                  <ul className="mt-6 space-y-3">
+                    {p.features.map((f) => (
+                      <li
+                        key={f}
+                        className="flex items-start gap-3 text-sm text-foreground/90"
+                      >
+                        <Check className="mt-0.5 size-4 shrink-0 text-primary" />
+                        <span>{f}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
-            ))}
-          </div>
-          <Caveat>{TRANSACTIONS.sizeNote}</Caveat>
-        </div>
-      </Reveal>
-    </Section>
-  );
-}
-
-/* 10 — Performance */
-export function Performance() {
-  return (
-    <Section id="performance">
-      <SectionHeader
-        index="10"
-        topic="Performance"
-        title="How fast is finalized?"
-      />
-      <Reveal>
-        <div className="rounded-card border border-border bg-card p-8 sm:p-12">
-          <div className="font-display text-6xl font-extralight tracking-tight text-primary sm:text-8xl">
-            {PERFORMANCE.headline}
-          </div>
-          <p className="mt-2 font-ui text-sm uppercase tracking-wider text-muted-foreground">
-            {PERFORMANCE.headlineLabel}
-          </p>
-          <div className="mt-10 grid gap-8 border-t border-border pt-8 sm:grid-cols-3">
-            {PERFORMANCE.stats.map((s) => (
-              <Stat key={s.label} value={s.value} label={s.label} />
-            ))}
-          </div>
-        </div>
-      </Reveal>
-      <Caveat>{PERFORMANCE.caveat}</Caveat>
-    </Section>
-  );
-}
-
-/* 11 — Modular expansion */
-export function Expansion() {
-  return (
-    <Section id="expansion">
-      <SectionHeader
-        index="11"
-        topic="Modular expansion — M1–M4"
-        title="Four modules for four different jobs."
-        intro={EXPANSION.intro}
-      />
-      <div className="grid gap-4 sm:grid-cols-2">
-        {EXPANSION.modules.map((m, i) => (
-          <Reveal key={m.id} delay={i * 70}>
-            <Card className="h-full">
-              <div className="flex items-center gap-3">
-                <span className="font-display text-2xl font-light text-primary">
-                  {m.id}
-                </span>
-                <h3 className="font-display text-lg">{m.name}</h3>
-              </div>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                {m.body}
-              </p>
-              <p className="mt-4 font-ui text-xs uppercase tracking-wider text-foreground/70">
-                {m.maturity}
-              </p>
-            </Card>
-          </Reveal>
-        ))}
+            </Reveal>
+          );
+        })}
       </div>
-      <div className="mt-10 grid gap-px overflow-hidden rounded-card border border-border">
-        {EXPANSION.tiers.map((t) => (
-          <div
-            key={t.tier}
-            className="flex flex-col gap-1 bg-card px-5 py-4 sm:flex-row sm:items-center sm:gap-5"
-          >
-            <span className="font-display text-xl font-light text-primary sm:w-8">
-              {t.tier}
-            </span>
-            <span className="text-sm font-medium text-foreground sm:w-80">
-              {t.label}
-            </span>
-            <span className="text-sm text-muted-foreground">{t.example}</span>
-          </div>
-        ))}
-      </div>
-      <Caveat>{EXPANSION.driver}</Caveat>
     </Section>
   );
 }
 
-/* 12 — Roadmap & wallets */
+/* 06 — Roadmap & wallets */
 export function Roadmap() {
   return (
     <Section id="roadmap">
       <SectionHeader
-        index="12"
+        index="06"
         topic="Roadmap & wallets"
         title="From PQ L1 to consumer-grade wallets."
       />
@@ -518,13 +248,10 @@ export function Roadmap() {
   );
 }
 
-/* 13 — The pitch */
+/* 07 — The pitch */
 export function Pitch() {
   return (
-    <Section
-      id="pitch"
-      className="border-t-0"
-    >
+    <Section id="pitch" className="border-t-0">
       <div
         className="rounded-card border border-border p-8 sm:p-16"
         style={{ background: "var(--gradient-hero)" }}

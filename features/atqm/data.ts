@@ -63,6 +63,86 @@ export const ATQM_VS_ARETH = {
   ],
 };
 
+/**
+ * Ecosystem + Products — the consumer-facing surfaces that sit on top of the
+ * Areth post-quantum core. Copy here is PLACEHOLDER ("neurslop") to be rewritten
+ * by marketing; product set mirrors the Figma `Qvanta` node 16820-45026
+ * (DEX, Staking, Bridge, mobile App, web App, + one ecosystem surface).
+ */
+export const ECOSYSTEM = {
+  intro:
+    "Areth is the post-quantum core. Everything a user touches — trading, staking, bridging, wallets — settles on the same ML-DSA / ML-KEM spine, so security never depends on the surface in front of it.",
+  core: {
+    label: "Areth",
+    sub: "Post-quantum L1",
+  },
+};
+
+/**
+ * The product surfaces of the ATOM ecosystem. Mirrors the Figma `Qvanta` product
+ * frames (node 16820-45026): DEX, Staking, Bridge and the mobile Wallet. `key`
+ * maps to both an icon (EcosystemOrbit) and a mock-interface component
+ * (ProductShowcase). Order here is the order nodes are placed around the circle.
+ */
+export type Product = {
+  key: "dex" | "staking" | "bridge" | "wallet";
+  name: string;
+  tagline: string;
+  body: string;
+  features: string[];
+};
+
+export const PRODUCTS: { intro: string; items: Product[] } = {
+  intro:
+    "Four surfaces, one post-quantum spine. No product re-implements its own cryptography — DEX, Staking, Bridge and the Wallet all ship against the same audited Areth core.",
+  items: [
+    {
+      key: "dex",
+      name: "DEX",
+      tagline: "Swap & trade",
+      body: "Trade any ecosystem asset with settlement you can trust. Every order is authorized with an ML-DSA signature and clears against the same block-bound finality as the chain itself.",
+      features: [
+        "One-click swaps with live, PQ-signed quotes",
+        "Slippage, rate and gas shown before you sign",
+        "Clean EIP-1559 fees — no blob theatre",
+      ],
+    },
+    {
+      key: "staking",
+      name: "Staking",
+      tagline: "Stake & earn",
+      body: "Stake QANT to help secure HotStuff finality and earn protocol rewards. Validator and delegator signatures are pure ML-DSA — no BLS aggregation, no pairing-based assumptions to break.",
+      features: [
+        "Live APR, max-slashing and balance at a glance",
+        "Transparent cooldown before you unstake",
+        "Rewards accrue against finalized blocks",
+      ],
+    },
+    {
+      key: "bridge",
+      name: "Bridge",
+      tagline: "Cross-chain",
+      body: "Move assets between Areth and the chains you already use. Cross-chain messages are anchored to finalized blocks and verified end to end with post-quantum signatures.",
+      features: [
+        "Pick source and destination chain in one view",
+        "Quoted amount, fees and address upfront",
+        "Crosschain routing backed by PQ proofs",
+      ],
+    },
+    {
+      key: "wallet",
+      name: "Wallet",
+      tagline: "Mobile · iOS & Android",
+      body: "A consumer-grade wallet where the post-quantum key lives in the Secure Enclave / StrongBox and never leaves in cleartext. Track balances, send and stake — all signed on device.",
+      features: [
+        "Face ID unlocks; the device signs",
+        "Portfolio, NFTs and qubit assets in one view",
+        "Threshold-of-N accounts across devices",
+      ],
+    },
+  ],
+};
+
 export const SUBSTRATE = {
   intro:
     "Areth is a fork-descendant of Reth — not Reth with PQ patches. We kept Reth's mature execution, storage, and trie. We replaced every place where Ethereum's cryptographic assumptions live.",
