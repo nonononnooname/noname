@@ -19,10 +19,14 @@ export function Section({
     <section
       id={id}
       className={cn(
-        "relative isolate scroll-mt-20 border-t border-border/60 px-4 py-20 sm:px-6 sm:py-28 lg:px-8",
+        "relative isolate scroll-mt-20 px-4 py-20 sm:px-6 sm:py-28 lg:px-8",
         className,
       )}
     >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/12 to-transparent"
+      />
       {background ? (
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
           {background}
@@ -126,7 +130,7 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-card border border-border bg-card p-6 sm:p-8",
+        "rounded-card border border-white/10 surface-raised p-6 shadow-depth transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-depth-lg sm:p-8",
         className,
       )}
     >

@@ -33,7 +33,7 @@ export function HardwareShowcase() {
   return (
     <section
       id="hardware"
-      className="relative isolate overflow-hidden border-t border-border/60 px-4 py-20 sm:px-6 sm:py-28 lg:px-8"
+      className="relative isolate scroll-mt-20 overflow-hidden border-t border-border/60 px-4 py-20 sm:px-6 sm:py-28 lg:px-8"
       style={{ background: "var(--gradient-hero)" }}
     >
       {/* ghosted backdrop word */}

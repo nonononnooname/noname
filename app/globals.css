@@ -127,3 +127,35 @@
 @utility glow-yellow {
   box-shadow: var(--glow-yellow);
 }
+
+/* Depth system — raised surface + soft ambient shadow + lit top edge.
+   Brand-appropriate volume (no harsh drop shadows): a top highlight reads as
+   light from above, the large soft shadow makes surfaces float. */
+@utility surface-raised {
+  background-color: var(--card);
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0)
+  );
+}
+
+@utility shadow-depth {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+    0 24px 50px -28px rgba(0, 0, 0, 0.85);
+}
+
+@utility shadow-depth-lg {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+    0 40px 80px -32px rgba(0, 0, 0, 0.95);
+}
+
+/* SMIL animations don't honor prefers-reduced-motion natively — hide the
+   moving orbit elements so reduced-motion users get the static diagram. */
+@media (prefers-reduced-motion: reduce) {
+  .orbit-motion {
+    display: none;
+  }
+}

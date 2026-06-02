@@ -4,6 +4,7 @@ import { SmokeBackground } from "@/components/ui/spooky-smoke-animation";
 import {
   Hero,
   Problem,
+  Comparison,
   AtqmVsAreth,
   Ecosystem,
   Products,
@@ -11,6 +12,7 @@ import {
   Pitch,
 } from "@/features/atqm/sections";
 import { HardwareShowcase } from "@/features/atqm/components/hardware-showcase";
+import { SiteFooter } from "@/features/atqm/components/site-footer";
 
 export const metadata: Metadata = {
   title: "ATQM // Atom Quantum — post-quantum Layer 1",
@@ -33,6 +35,7 @@ export default function AtqmPage() {
       <main>
         <Hero />
         <Problem />
+        <Comparison />
         <AtqmVsAreth />
         <Ecosystem />
         <Products />
@@ -40,6 +43,7 @@ export default function AtqmPage() {
         <Roadmap />
         <Pitch />
       </main>
+      <SiteFooter />
     </>
   );
 }

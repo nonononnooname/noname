@@ -300,7 +300,7 @@ export function LatticeHero() {
           </div>
           <a
             href="#problem"
-            className="inline-flex min-h-11 items-center bg-foreground px-6 py-3 font-ui text-xs font-bold uppercase tracking-wider text-background transition-colors hover:bg-primary focus-visible:bg-primary focus-visible:outline-none"
+            className="inline-flex min-h-11 items-center bg-foreground px-6 py-3 font-ui text-xs font-bold uppercase tracking-wider text-background transition-[background-color,box-shadow] duration-300 hover:bg-primary hover:glow-yellow focus-visible:bg-primary focus-visible:glow-yellow focus-visible:outline-none"
             style={{ clipPath: "polygon(0 0, 100% 0, 100% 70%, 85% 100%, 0 100%)" }}
           >
             Explore the stack

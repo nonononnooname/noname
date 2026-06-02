@@ -5,6 +5,8 @@ import { Entropy } from "@/components/ui/entropy";
 
 import {
   PROBLEM,
+  COMPARISON,
+  ANALOGIES,
   ATQM_VS_ARETH,
   ECOSYSTEM,
   PRODUCTS,
@@ -12,14 +14,14 @@ import {
   PITCH,
 } from "./data";
 import { Reveal } from "./components/reveal";
-import { LatticeHero } from "./components/lattice-hero";
+import { QuantumHero } from "./components/quantum-hero";
 import { EcosystemOrbit } from "./components/ecosystem-orbit";
 import { PRODUCT_MOCKS } from "./components/mocks";
 import { Section, SectionHeader, Stat, Card } from "./components/primitives";
 
-/* 01 — Hero (animated post-quantum lattice field, ATQM-branded) */
+/* 01 — Hero (premium quantum-atom field: nucleus, electron orbits, bloom) */
 export function Hero() {
-  return <LatticeHero />;
+  return <QuantumHero />;
 }
 
 /* 02 — The Problem (keeps the order/chaos entropy field as its backdrop) */
@@ -64,16 +66,91 @@ export function Problem() {
   );
 }
 
-/* 03 — ATQM vs Areth */
+/* 03 — How Areth compares (chain comparison + plain-language analogies) */
+export function Comparison() {
+  return (
+    <Section id="comparison">
+      <SectionHeader
+        index="03"
+        topic="How Areth compares"
+        title="Every other L1 still trusts math a quantum computer breaks."
+        intro={COMPARISON.intro}
+      />
+      <Reveal>
+        <div className="overflow-x-auto rounded-card border border-border shadow-depth">
+          <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+            <thead>
+              <tr className="bg-card">
+                <th className="px-5 py-4 font-ui text-xs uppercase tracking-wider text-muted-foreground" />
+                {COMPARISON.chains.map((chain, i) => (
+                  <th
+                    key={chain}
+                    className={cn(
+                      "px-5 py-4 font-ui text-xs uppercase tracking-wider",
+                      i === 0 ? "bg-primary/5 text-primary" : "text-foreground",
+                    )}
+                  >
+                    {chain}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {COMPARISON.rows.map((row, ri) => (
+                <tr key={row.label} className={cn(ri % 2 === 1 && "bg-card/40")}>
+                  <td className="border-t border-border px-5 py-4 align-top font-ui text-foreground">
+                    {row.label}
+                  </td>
+                  {row.values.map((value, ci) => (
+                    <td
+                      key={`${row.label}-${COMPARISON.chains[ci]}`}
+                      className={cn(
+                        "border-t border-border px-5 py-4 align-top",
+                        ci === 0
+                          ? "bg-primary/5 font-medium text-primary"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      {value}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Reveal>
+      <Reveal>
+        <p className="mt-4 max-w-3xl text-xs leading-relaxed text-muted-foreground">
+          {COMPARISON.note}
+        </p>
+      </Reveal>
+      <div className="mt-12 grid gap-4 sm:grid-cols-3">
+        {ANALOGIES.map((a, i) => (
+          <Reveal key={a.title} delay={i * 80}>
+            <Card className="h-full">
+              <h3 className="font-display text-lg font-light">{a.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                {a.body}
+              </p>
+            </Card>
+          </Reveal>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+/* 04 — ATQM vs Areth */
 export function AtqmVsAreth() {
   return (
     <Section id="atqm-vs-areth">
       <SectionHeader
-        index="03"
+        index="04"
         topic="Two names, one stack"
         title="ATQM is the brand. Areth is the chain."
       />
-      <div className="overflow-hidden rounded-card border border-border">
+      <div className="overflow-hidden rounded-card border border-border shadow-depth">
         <table className="w-full border-collapse text-left text-sm">
           <thead>
             <tr className="bg-card">
@@ -129,7 +206,7 @@ export function Ecosystem() {
   return (
     <Section id="ecosystem">
       <SectionHeader
-        index="04"
+        index="05"
         topic="One core, many surfaces"
         title={
           <>
@@ -150,7 +227,7 @@ export function Products() {
   return (
     <Section id="products">
       <SectionHeader
-        index="05"
+        index="06"
         topic="Built on the post-quantum core"
         title="The product surfaces."
         intro={PRODUCTS.intro}
@@ -203,7 +280,7 @@ export function Roadmap() {
   return (
     <Section id="roadmap">
       <SectionHeader
-        index="06"
+        index="07"
         topic="Roadmap & wallets"
         title="From PQ L1 to consumer-grade wallets."
       />
@@ -255,7 +332,7 @@ export function Pitch() {
   return (
     <Section id="pitch" className="border-t-0">
       <div
-        className="rounded-card border border-border p-8 sm:p-16"
+        className="rounded-card border border-border p-8 shadow-depth-lg sm:p-16"
         style={{ background: "var(--gradient-hero)" }}
       >
         <Reveal>

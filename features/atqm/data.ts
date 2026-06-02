@@ -172,6 +172,58 @@ export const HARDWARE = {
   tagline: "Impenetrable defense against any threat",
 };
 
+/**
+ * Plain-language comparison vs the chains people already know. The cryptographic
+ * facts are accurate (ECDSA / BLS / Ed25519 are all broken by Shor's algorithm;
+ * ML-DSA / ML-KEM are NIST post-quantum standards). The Areth column (index 0)
+ * is rendered as the highlighted one.
+ */
+export const COMPARISON = {
+  intro:
+    "Bitcoin, Ethereum and Solana all lock funds with elliptic-curve cryptography — the exact thing a quantum computer breaks. Areth is built on NIST post-quantum primitives from the genesis block.",
+  chains: ["Areth", "Ethereum", "Bitcoin", "Solana"],
+  rows: [
+    {
+      label: "Signatures",
+      values: ["ML-DSA / FN-DSA", "ECDSA + BLS", "ECDSA", "Ed25519"],
+    },
+    {
+      label: "Finality",
+      values: [
+        "Deterministic, block-bound",
+        "Probabilistic + checkpoints",
+        "Probabilistic (PoW)",
+        "Probabilistic",
+      ],
+    },
+    {
+      label: "Breaks under a quantum computer",
+      values: ["No", "Yes", "Yes", "Yes"],
+    },
+    {
+      label: "Post-quantum from genesis",
+      values: ["Yes", "No", "No", "No"],
+    },
+  ],
+  note: "ECDSA, BLS and Ed25519 are all broken by Shor's algorithm on a large enough quantum computer. Other chains have post-quantum migration on their roadmaps — Areth is post-quantum by design, not a retrofit.",
+};
+
+/** Understandable analogies for a non-technical audience. */
+export const ANALOGIES = [
+  {
+    title: "Harvest now, decrypt later",
+    body: "A thief can't open your safe today — so he photographs it and waits for a master key. Everything public on a chain today is that photo: stored forever, readable the day a quantum computer arrives.",
+  },
+  {
+    title: "The lock everyone shares",
+    body: "Bitcoin, Ethereum and most chains lock funds with elliptic-curve math — a padlock a quantum computer picks in seconds. Areth swaps it for a lattice-based lock that has no known pick.",
+  },
+  {
+    title: "You can't re-pour a foundation",
+    body: "Bolting post-quantum crypto onto a live chain is like replacing a skyscraper's foundation with everyone still inside. Areth poured its post-quantum foundation at the genesis block.",
+  },
+];
+
 export const SUBSTRATE = {
   intro:
     "Areth is a fork-descendant of Reth — not Reth with PQ patches. We kept Reth's mature execution, storage, and trie. We replaced every place where Ethereum's cryptographic assumptions live.",

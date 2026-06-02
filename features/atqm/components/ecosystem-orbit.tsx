@@ -52,6 +52,23 @@ export function EcosystemOrbit() {
         viewBox="0 0 100 100"
         className="absolute inset-0 -z-10 size-full"
       >
+        <defs>
+          <filter
+            id="orbit-glow"
+            x="-200%"
+            y="-200%"
+            width="500%"
+            height="500%"
+          >
+            <feGaussianBlur stdDeviation="0.7" result="b" />
+            <feMerge>
+              <feMergeNode in="b" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* spokes */}
         {nodes.map((node) => (
           <line
             key={`${node.x}-${node.y}`}
@@ -63,6 +80,45 @@ export function EcosystemOrbit() {
             strokeWidth="0.4"
           />
         ))}
+
+        {/* energy pulses — the core powering each surface (staggered) */}
+        {nodes.map((node, i) => (
+          <circle
+            key={`pulse-${node.x}-${node.y}`}
+            r="0.9"
+            opacity="0"
+            filter="url(#orbit-glow)"
+            className="orbit-motion fill-primary"
+          >
+            <animateMotion
+              dur="3.2s"
+              begin={`${i * 0.5}s`}
+              repeatCount="indefinite"
+              path={`M50,50 L${node.x},${node.y}`}
+            />
+            <animate
+              attributeName="opacity"
+              dur="3.2s"
+              begin={`${i * 0.5}s`}
+              repeatCount="indefinite"
+              values="0;1;1;0"
+              keyTimes="0;0.4;0.85;1"
+            />
+          </circle>
+        ))}
+
+        {/* a quantum electron on an inner shell */}
+        <circle
+          r="1.1"
+          filter="url(#orbit-glow)"
+          className="orbit-motion fill-primary"
+        >
+          <animateMotion
+            dur="16s"
+            repeatCount="indefinite"
+            path="M50,27 a23,23 0 1,0 0,46 a23,23 0 1,0 0,-46"
+          />
+        </circle>
       </svg>
 
       {/* concentric rings */}
