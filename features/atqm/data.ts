@@ -85,8 +85,10 @@ export const ECOSYSTEM = {
  * (ProductShowcase). Order here is the order nodes are placed around the circle.
  */
 export type Product = {
-  key: "dex" | "staking" | "bridge" | "wallet";
+  key: "dex" | "staking" | "bridge" | "hardware" | "wallet";
   name: string;
+  /** Short label for the ecosystem orbit node (defaults to name). */
+  short?: string;
   tagline: string;
   body: string;
   features: string[];
@@ -94,7 +96,7 @@ export type Product = {
 
 export const PRODUCTS: { intro: string; items: Product[] } = {
   intro:
-    "Four surfaces, one post-quantum spine. No product re-implements its own cryptography — DEX, Staking, Bridge and the Wallet all ship against the same audited Areth core.",
+    "Five surfaces, one post-quantum spine. No product re-implements its own cryptography — DEX, Staking, Bridge, the Hardware Wallet and its companion app all ship against the same audited Areth core.",
   items: [
     {
       key: "dex",
@@ -130,17 +132,44 @@ export const PRODUCTS: { intro: string; items: Product[] } = {
       ],
     },
     {
-      key: "wallet",
-      name: "Wallet",
-      tagline: "Mobile · iOS & Android",
-      body: "A consumer-grade wallet where the post-quantum key lives in the Secure Enclave / StrongBox and never leaves in cleartext. Track balances, send and stake — all signed on device.",
+      key: "hardware",
+      name: "Hardware Wallet",
+      short: "Hardware",
+      tagline: "Cold storage · post-quantum",
+      body: "Engineered with the latest advancements in quantum computing to protect you and your crypto against any current or future threat. Keys are generated and ML-DSA signing happens on-device — they never leave the secure element in cleartext.",
       features: [
-        "Face ID unlocks; the device signs",
-        "Portfolio, NFTs and qubit assets in one view",
+        "Air-gapped post-quantum secure element",
+        "On-device ML-DSA signing — keys never exported",
+        "Pairs with the companion app over an encrypted channel",
+      ],
+    },
+    {
+      key: "wallet",
+      name: "Companion App",
+      short: "Companion",
+      tagline: "Mobile · iOS & Android",
+      body: "Take full control of your assets with the companion app. Stay on top of market fluctuations, track the value of your funds, and trade with a tap — every action confirmed on the paired Hardware Wallet.",
+      features: [
+        "Live portfolio, NFTs and qubit assets in one view",
+        "Trade and send, signed on the paired device",
         "Threshold-of-N accounts across devices",
       ],
     },
   ],
+};
+
+/**
+ * Hardware Wallet hero composition — recreates the Figma "POST" frame: ghosted
+ * "TECHNOLOGY" backdrop, the device render, two tick-marked copy blocks, the big
+ * ATOM wordmark and the tagline. Copy is verbatim from the frame.
+ */
+export const HARDWARE = {
+  ghost: "TECHNOLOGY",
+  eyebrow: "Hardware Wallet",
+  left: "Engineered with the latest advancements in quantum computing. Protecting you and your crypto against any current or future threat.",
+  right:
+    "Take full control of your assets with the companion app. Stay on top of market fluctuations, track the value of your funds and trade assets with a tap.",
+  tagline: "Impenetrable defense against any threat",
 };
 
 export const SUBSTRATE = {

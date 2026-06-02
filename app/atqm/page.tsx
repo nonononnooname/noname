@@ -10,6 +10,7 @@ import {
   Roadmap,
   Pitch,
 } from "@/features/atqm/sections";
+import { HardwareShowcase } from "@/features/atqm/components/hardware-showcase";
 
 export const metadata: Metadata = {
   title: "ATQM // Atom Quantum — post-quantum Layer 1",
@@ -35,6 +36,7 @@ export default function AtqmPage() {
         <AtqmVsAreth />
         <Ecosystem />
         <Products />
+        <HardwareShowcase />
         <Roadmap />
         <Pitch />
       </main>

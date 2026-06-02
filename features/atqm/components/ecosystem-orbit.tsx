@@ -1,4 +1,12 @@
-import { Atom, Repeat, Coins, Waypoints, Wallet, type LucideIcon } from "lucide-react";
+import {
+  Atom,
+  Repeat,
+  Coins,
+  Waypoints,
+  ShieldCheck,
+  Smartphone,
+  type LucideIcon,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { ECOSYSTEM, PRODUCTS, type Product } from "../data";
@@ -8,7 +16,8 @@ export const PRODUCT_ICONS: Record<Product["key"], LucideIcon> = {
   dex: Repeat,
   staking: Coins,
   bridge: Waypoints,
-  wallet: Wallet,
+  hardware: ShieldCheck,
+  wallet: Smartphone,
 };
 
 /** Node orbit radius, as a % of the square container (ring diameter = 2 × R). */
@@ -95,7 +104,7 @@ export function EcosystemOrbit() {
                   node.labelAbove ? "bottom-full mb-2" : "top-full mt-2",
                 )}
               >
-                {product.name}
+                {product.short ?? product.name}
               </span>
             </div>
           </div>

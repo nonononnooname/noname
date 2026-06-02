@@ -156,9 +156,11 @@ export function Products() {
         intro={PRODUCTS.intro}
       />
       <div className="space-y-16 sm:space-y-28">
-        {PRODUCTS.items.map((p, i) => {
-          const Mock = PRODUCT_MOCKS[p.key];
-          const flip = i % 2 === 1;
+        {PRODUCTS.items
+          .filter((p) => p.key !== "hardware")
+          .map((p, i) => {
+            const Mock = PRODUCT_MOCKS[p.key];
+            const flip = i % 2 === 1;
           return (
             <Reveal key={p.key}>
               <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
