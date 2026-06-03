@@ -363,11 +363,10 @@ export function PolyhedronHero() {
 
         {/* Interface grid */}
         <div className="ah-grid">
-          <div className="ah-tag">ATOM QUANTUM</div>
+          <div className="ah-tag">ATQM</div>
           <div className="ah-readout">
             <div>{HERO.primitives.join(" · ")}</div>
             <div>FINALITY &lt; 1.0 s</div>
-            <div>{HERO.domain}</div>
           </div>
 
           <div className="ah-headline">
