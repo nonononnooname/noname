@@ -4,23 +4,22 @@ import { SmokeBackground } from "@/components/ui/spooky-smoke-animation";
 import {
   Hero,
   Problem,
-  AtqmVsAreth,
-  Substrate,
+  AtqmBrand,
   Architecture,
-  CrateMap,
-  Consensus,
   PqPrimitives,
   Transactions,
   Performance,
-  Expansion,
+  Ecosystem,
+  Products,
   Roadmap,
   Pitch,
 } from "@/features/atqm/sections";
+import { HardwareShowcase } from "@/features/atqm/components/hardware-showcase";
 
 export const metadata: Metadata = {
   title: "ATQM // Atom Quantum — post-quantum Layer 1",
   description:
-    "Atom Quantum (ATQM) / Areth: a post-quantum Layer 1. ML-DSA, ML-KEM, HotStuff finality — EVM where it counts, new cryptography everywhere else.",
+    "Atom Quantum (ATQM): a post-quantum Layer 1. ML-DSA, ML-KEM, HotStuff finality — EVM where it counts, new cryptography everywhere else.",
 };
 
 export default function AtqmPage() {
@@ -37,16 +36,15 @@ export default function AtqmPage() {
       </div>
       <main>
         <Hero />
-      <Problem />
-      <AtqmVsAreth />
-      <Substrate />
-      <Architecture />
-      <CrateMap />
-      <Consensus />
-      <PqPrimitives />
-      <Transactions />
-      <Performance />
-      <Expansion />
+        <Problem />
+        <AtqmBrand />
+        <Architecture />
+        <PqPrimitives />
+        <Transactions />
+        <Performance />
+        <Ecosystem />
+        <Products />
+        <HardwareShowcase />
         <Roadmap />
         <Pitch />
       </main>
