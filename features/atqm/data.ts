@@ -16,11 +16,11 @@ export const HERO = {
 
 export const PROBLEM = {
   intro:
-    "Every major chain stakes its security on elliptic-curve cryptography that a sufficiently capable quantum computer breaks through Shor's algorithm. The fix isn't a patch on a live network — it's a network designed around the new primitives from genesis.",
+    "Every major chain stakes its security on elliptic-curve cryptography that a large enough quantum computer breaks with Shor's algorithm. You can't patch a live network into post-quantum safety; you build the chain around the new primitives from genesis.",
   vectors: [
     {
       title: "Harvest now, decrypt later",
-      body: "Adversaries already archive today's public chain data and signatures, waiting for a cryptographically relevant quantum computer. Anything signed under ECDSA or wrapped under X25519 today is on the clock — and a blockchain is uniquely exposed: data is public, immutable, and every spent public key is stored forever.",
+      body: "Adversaries already archive today's public chain data and signatures, waiting for a cryptographically relevant quantum computer. Anything signed under ECDSA or wrapped under X25519 today is on the clock. A blockchain sits more exposed than most systems: its data is public, its history is immutable, and every spent public key stays on-chain forever.",
     },
     {
       title: "BLS validators are fragile",
@@ -28,7 +28,7 @@ export const PROBLEM = {
     },
     {
       title: "Migration ≠ retrofit",
-      body: "Bolting post-quantum crypto onto secp256k1 chains breaks address schemes, finality, and a decade of tooling. The post-quantum stack has to be laid down from the network's genesis block.",
+      body: "Bolting post-quantum crypto onto secp256k1 chains breaks address schemes, finality, and a decade of tooling. A chain has to lay its post-quantum stack at the genesis block.",
     },
   ],
   context: [
@@ -38,11 +38,11 @@ export const PROBLEM = {
     },
     {
       value: "2030 / 2035",
-      label: "NIST IR 8547 — deprecate after 2030, disallow after 2035",
+      label: "NIST IR 8547: deprecate after 2030, disallow after 2035",
     },
     {
       value: "< 1M qubits",
-      label: "Gidney 2025 — RSA-2048 estimate, down from ~20M (2019)",
+      label: "Gidney 2025: RSA-2048 estimate, down from ~20M (2019)",
     },
   ],
 };
@@ -62,7 +62,7 @@ export const ATQM_ACRONYM = [
  */
 export const ECOSYSTEM = {
   intro:
-    "ATQM is the post-quantum core. Everything a user touches — trading, staking, bridging, wallets — settles on the same ML-DSA / ML-KEM spine, so security never depends on the surface in front of it.",
+    "ATQM is the post-quantum core. Trading, staking, bridging, and wallets all settle on the same ML-DSA / ML-KEM spine, so the surface a user touches can't weaken the security underneath.",
   core: {
     label: "ATQM",
     sub: "Post-quantum L1",
@@ -87,7 +87,7 @@ export type Product = {
 
 export const PRODUCTS: { intro: string; items: Product[] } = {
   intro:
-    "Five surfaces, one post-quantum spine. No product re-implements its own cryptography — DEX, Staking, Bridge, the Hardware Wallet and its companion app all ship against the same audited ATQM core.",
+    "Five surfaces, one post-quantum spine. No product re-implements its own cryptography. DEX, Staking, Bridge, the Hardware Wallet, and its companion app all ship against the same audited ATQM core.",
   items: [
     {
       key: "dex",
@@ -97,14 +97,14 @@ export const PRODUCTS: { intro: string; items: Product[] } = {
       features: [
         "One-click swaps with live, PQ-signed quotes",
         "Slippage, rate and gas shown before you sign",
-        "Clean EIP-1559 fees — no blob theatre",
+        "Clean EIP-1559 fees, no blob theatre",
       ],
     },
     {
       key: "staking",
       name: "Staking",
       tagline: "Stake & earn",
-      body: "Stake QANT to help secure HotStuff finality and earn protocol rewards. Validator and delegator signatures are pure ML-DSA — no BLS aggregation, no pairing-based assumptions to break.",
+      body: "Stake QANT to help secure HotStuff finality and earn protocol rewards. Validator and delegator signatures are pure ML-DSA, with no BLS aggregation and no pairing-based assumptions to break.",
       features: [
         "Live APR, max-slashing and balance at a glance",
         "Transparent cooldown before you unstake",
@@ -127,10 +127,10 @@ export const PRODUCTS: { intro: string; items: Product[] } = {
       name: "Hardware Wallet",
       short: "Hardware",
       tagline: "Cold storage · post-quantum",
-      body: "Engineered with the latest advancements in quantum computing to protect you and your crypto against any current or future threat. Keys are generated and ML-DSA signing happens on-device — they never leave the secure element in cleartext.",
+      body: "Built on NIST post-quantum cryptography to protect your keys against today's threats and tomorrow's quantum ones. Keys are generated on the device and ML-DSA signing runs there too, so they never leave the secure element in cleartext.",
       features: [
         "Air-gapped post-quantum secure element",
-        "On-device ML-DSA signing — keys never exported",
+        "On-device ML-DSA signing, keys never exported",
         "Pairs with the companion app over an encrypted channel",
       ],
     },
@@ -139,7 +139,7 @@ export const PRODUCTS: { intro: string; items: Product[] } = {
       name: "Companion App",
       short: "Companion",
       tagline: "Mobile · iOS & Android",
-      body: "Take full control of your assets with the companion app. Stay on top of market fluctuations, track the value of your funds, and trade with a tap — every action confirmed on the paired Hardware Wallet.",
+      body: "Take control of your assets from the companion app: watch the market, track your balance, and trade with a tap. Every action is confirmed on the paired Hardware Wallet.",
       features: [
         "Live portfolio, NFTs and qubit assets in one view",
         "Trade and send, signed on the paired device",
@@ -240,7 +240,7 @@ export const SUBSTRATE = {
 
 export const ARCHITECTURE = {
   intro:
-    "Every node speaks the same encrypted, ML-KEM-derived transport. What changes is the cargo.",
+    "Every node speaks the same encrypted, ML-KEM-derived transport. Only the cargo changes.",
   roles: [
     { name: "Discovery", body: "ANR records and peer discovery. No validator state, no execution data." },
     { name: "Public Execution", body: "Finalized block sync, transaction gossip, snap-style state distribution." },
@@ -282,7 +282,7 @@ export const CONSENSUS = {
 
 export const PRIMITIVES = {
   intro:
-    "NIST-standardized where it counts — stated precisely, not top-to-bottom marketing.",
+    "NIST-standardized where it counts, named layer by layer rather than sold as a top-to-bottom sweep.",
   rows: [
     { layer: "Transaction authentication", primitive: "ML-DSA / FN-DSA", status: "single-key or threshold-of-N" },
     { layer: "Validator consensus signatures", primitive: "ML-DSA", status: "no BLS, no aggregation" },
@@ -293,17 +293,17 @@ export const PRIMITIVES = {
   standards: [
     { name: "ML-KEM-768", fips: "FIPS 203", final: true, note: "All key exchange. Formerly CRYSTALS-Kyber." },
     { name: "ML-DSA-65", fips: "FIPS 204", final: true, note: "Default signature scheme. Formerly CRYSTALS-Dilithium." },
-    { name: "FN-DSA-512", fips: "FIPS 206", final: false, note: "Compact signatures. Falcon-based — still a draft standard." },
+    { name: "FN-DSA-512", fips: "FIPS 206", final: false, note: "Compact signatures. Falcon-based, still a draft standard." },
   ],
 };
 
 export const TRANSACTIONS = {
   intro:
-    "Same EVM. Different signature. Cleaner surface. A Solidity contract that compiled and ran on Ethereum compiles and runs on ATQM — only the signing layer underneath changed.",
+    "Same EVM, different signature, cleaner surface. A Solidity contract that compiled and ran on Ethereum compiles and runs on ATQM; only the signing layer underneath changed.",
   features: [
     { title: "EVM-compatible", body: "Nonce, chain id, gas, EIP-1559 fees, access lists, EIP-2718 envelopes, RLP. Solidity tooling carries over." },
-    { title: "PQ-derived sender", body: "Addresses come from keccak(domain ‖ prefixed_key)[12..] — not secp256k1 recovery. Still 20 bytes, still EVM-native." },
-    { title: "Threshold accounts", body: "Threshold-of-N is a first-class auth mode. One account, many devices — no contract gymnastics." },
+    { title: "PQ-derived sender", body: "Addresses come from keccak(domain ‖ prefixed_key)[12..] instead of secp256k1 recovery. They stay 20 bytes and EVM-native." },
+    { title: "Threshold accounts", body: "Threshold-of-N is a first-class auth mode. One account spans many devices, with no contract gymnastics." },
     { title: "No blob theatre", body: "Blob transactions and KZG are rejected at the pool boundary. No data-availability baggage." },
   ],
   sizes: [
@@ -312,7 +312,7 @@ export const TRANSACTIONS = {
     { algo: "ML-DSA-65", sig: "3,309 B" },
   ],
   sizeNote:
-    "PQ signatures are ~10–50× larger than ECDSA — which is exactly why atqm-txpool is tuned for PQ signature sizes. Contract-level EVM compatibility is preserved, but transaction economics (calldata, bandwidth, storage) change.",
+    "PQ signatures run ~10–50× larger than ECDSA, which is why atqm-txpool is tuned for PQ signature sizes. ATQM preserves contract-level EVM compatibility, but transaction economics (calldata, bandwidth, storage) change.",
 };
 
 export const PERFORMANCE = {
@@ -324,7 +324,7 @@ export const PERFORMANCE = {
     { value: "0", label: "Probabilistic confirmations to wait through" },
   ],
   caveat:
-    "Honest qualification: a 4-validator smoke run is a code-correctness signal, not a production benchmark. Behaviour at production scale (50+ validators, real geography, ML-DSA quorums without aggregation) is still to be tested. Round timeout is not block interval — finality is gated on real payload-build, proposal, vote-quorum, QC, commit-vote-quorum, and persistence time.",
+    "Honest qualification: a 4-validator smoke run is a code-correctness signal, not a production benchmark. Behaviour at production scale (50+ validators, real geography, ML-DSA quorums without aggregation) is still to be tested. The round timeout is not the block interval; finality waits on real payload-build, proposal, vote-quorum, QC, commit-vote-quorum, and persistence time.",
 };
 
 export const EXPANSION = {
@@ -349,8 +349,8 @@ export const EXPANSION = {
 export const ROADMAP = {
   steps: [
     { phase: "ATQM crate development", when: "Q1–Q2 2026", status: "Done" },
-    { phase: "Smoke runs — 300+ blocks, 4 validators", when: "Q1 2026", status: "Done (code-correctness signal)" },
-    { phase: "Production-scale testing — 50+ validators", when: "—", status: "Upcoming" },
+    { phase: "Smoke runs: 300+ blocks, 4 validators", when: "Q1 2026", status: "Done (code-correctness signal)" },
+    { phase: "Production-scale testing: 50+ validators", when: "—", status: "Upcoming" },
     { phase: "Testnet", when: "June 2026", status: "Launch" },
     { phase: "External crypto / security audit", when: "Before mainnet", status: "Mainnet precondition" },
     { phase: "Mainnet", when: "After testnet + audit", status: "Planned" },
