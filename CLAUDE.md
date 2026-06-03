@@ -47,10 +47,10 @@ Four-stage presentation site for **Atom Quantum (ATQM)**. One Next.js app, four 
 
 ## Do NOT touch
 
-- `qlosophy/` and `public/qlosophy/` — finished legacy site, embedded **as-is**. No edits to
+- `public/qlosophy/` — finished legacy site, served **as-is** (the single copy). No edits to
   its JS/CSS/gifs.
-- `Qlosophy.html`, `Q-Day Tracker.html`, `atqm_docs/`, `screenshots/`, `uploads/` — pre-existing,
-  leave intact.
+- `atqm_docs/`, `ThermoRuliad Labs_docs/` (especially `ruliad.md`), `screenshots/`, `uploads/` —
+  source / pre-existing, leave intact.
 
 ## Commands
 

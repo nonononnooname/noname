@@ -76,12 +76,10 @@ monochrome base (`#000000` / `#FFFFFF`) + a single accent **brand yellow `#FFD80
 ├── components/ui/          # shadcn primitives (button, badge, input, sheet, …)
 ├── lib/utils.ts            # cn() helper
 ├── public/
-│   └── qlosophy/           # legacy QLOSOPHY site, copied verbatim (Phase 2)
+│   └── qlosophy/           # legacy QLOSOPHY site — the single copy, served as-is
 ├── atqm_docs/              # source content for the ATQM page (not shipped)
-├── qlosophy/               # ORIGINAL legacy site (kept; copied into public/)
-├── screenshots/ uploads/   # pre-existing assets (untouched)
-├── Qlosophy.html           # original landing (kept for reference)
-└── Q-Day Tracker.html      # original tracker (kept for reference)
+├── ThermoRuliad Labs_docs/ # source for Atom Boundary + future Ruliad (not shipped)
+└── screenshots/ uploads/   # pre-existing dev assets (untouched)
 ```
 
 `features/` is **feature-based**: a feature owns its components and data together, instead
@@ -89,10 +87,12 @@ of splitting by technical layer.
 
 ## How QLOSOPHY is embedded
 
-QLOSOPHY is finished and must not change. The legacy folder (`qlosophy/`: vanilla JS,
-gifs, canvases) is copied verbatim into `public/qlosophy/` and served as a static page at
-`/qlosophy`. No line of `core.js` / `oracle.js` / `machine.js` is edited. The header simply
-links to that route.
+QLOSOPHY is finished and must not change. Its files (vanilla JS, gifs, canvases) live as a
+**single copy** under `public/qlosophy/` and are served verbatim as a static page at
+`/qlosophy` (the route is an `<iframe>` over `public/qlosophy/index.html`). No line of
+`core.js` / `oracle.js` / `machine.js` is edited. On Vercel these ship as static CDN assets,
+so the vanilla JS needs no server runtime. (The earlier duplicate root `qlosophy/` copy was
+removed — `public/` is now the only copy.)
 
 ## Product mocks (interactive)
 
