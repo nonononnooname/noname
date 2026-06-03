@@ -155,25 +155,26 @@ export function PolyhedronHero() {
       sceneCtx!.lineCap = "round";
       sceneCtx!.lineJoin = "round";
 
-      // ambient core glow
-      sceneCtx!.globalAlpha = reduce ? 0.5 : 0.4 + 0.08 * Math.sin(t * 0.9);
-      const cr = R * 1.6;
+      // ambient core glow — kept faint so the centre doesn't blow out to white
+      sceneCtx!.globalAlpha = reduce ? 0.16 : 0.12 + 0.04 * Math.sin(t * 0.9);
+      const cr = R * 1.15;
       sceneCtx!.drawImage(glow, cx - cr, cy - cr, cr * 2, cr * 2);
 
-      // edges — faint soft body + bright thin core (the bloom turns these into tubes)
+      // edges — soft body + thin core. Brightness is kept nearly flat front-to-
+      // back so the whole mesh reads as one even yellow tone, not a hot gradient.
       sceneCtx!.strokeStyle = rgba(1);
       for (const [a, b] of EDGES) {
         const pa = proj[a];
         const pb = proj[b];
         const f = ((pa.z + pb.z) / 2 + 1) / 2; // 0 back .. 1 front
-        sceneCtx!.globalAlpha = 0.04 + f * 0.16;
-        sceneCtx!.lineWidth = 1.1 + f * 2.0;
+        sceneCtx!.globalAlpha = 0.08 + f * 0.06;
+        sceneCtx!.lineWidth = 1.2 + f * 0.8;
         sceneCtx!.beginPath();
         sceneCtx!.moveTo(pa.x, pa.y);
         sceneCtx!.lineTo(pb.x, pb.y);
         sceneCtx!.stroke();
-        sceneCtx!.globalAlpha = 0.14 + f * 0.55;
-        sceneCtx!.lineWidth = 0.5 + f * 0.9;
+        sceneCtx!.globalAlpha = 0.26 + f * 0.16;
+        sceneCtx!.lineWidth = 0.5 + f * 0.5;
         sceneCtx!.beginPath();
         sceneCtx!.moveTo(pa.x, pa.y);
         sceneCtx!.lineTo(pb.x, pb.y);
@@ -186,8 +187,8 @@ export function PolyhedronHero() {
       for (const p of proj) {
         const f = (p.z + 1) / 2;
         const defocus = Math.min(1, Math.abs(p.z - FOCAL_Z) / 1.3);
-        const r = (5 + f * 13) * p.persp * (1 + defocus * 1.5);
-        sceneCtx!.globalAlpha = (0.26 + f * 0.74) * (1 - defocus * 0.5);
+        const r = (4 + f * 6) * p.persp * (1 + defocus * 0.8);
+        sceneCtx!.globalAlpha = (0.22 + f * 0.28) * (1 - defocus * 0.4);
         sceneCtx!.drawImage(glow, p.x - r, p.y - r, r * 2, r * 2);
       }
 
@@ -203,8 +204,8 @@ export function PolyhedronHero() {
           if (env <= 0.03) continue;
           const px = pa.x + (pb.x - pa.x) * u;
           const py = pa.y + (pb.y - pa.y) * u;
-          const pr = (2.5 + f * 7) * env;
-          sceneCtx!.globalAlpha = (0.35 + f * 0.55) * env;
+          const pr = (2 + f * 4) * env;
+          sceneCtx!.globalAlpha = (0.22 + f * 0.3) * env;
           sceneCtx!.drawImage(glow, px - pr, py - pr, pr * 2, pr * 2);
         }
       }
@@ -234,10 +235,10 @@ export function PolyhedronHero() {
       ctx!.globalCompositeOperation = "lighter";
       // cores get a whisper of blur so nothing reads razor-sharp (frosted feel)
       ctx!.filter = "blur(1px)";
-      ctx!.globalAlpha = 0.8;
+      ctx!.globalAlpha = 0.82;
       ctx!.drawImage(scene, 0, 0, width, height);
       ctx!.filter = "none";
-      ctx!.globalAlpha = 0.92;
+      ctx!.globalAlpha = 0.7;
       ctx!.drawImage(bloom, 0, 0, width, height);
       ctx!.globalAlpha = 1;
       ctx!.globalCompositeOperation = "source-over";
@@ -279,17 +280,19 @@ export function PolyhedronHero() {
   }, []);
 
   return (
-    <section className="relative flex h-[calc(100vh-4rem)] min-h-[600px] items-center justify-center overflow-hidden bg-background">
+    <section className="relative flex h-[calc(100vh-4rem)] min-h-[600px] items-center justify-center overflow-hidden">
       <div className="ah-scope" ref={wrapRef}>
         <style>{`
           .ah-scope {
-            --bg: #000000;
             --silver: #e6e6e6;
             --accent: var(--brand-yellow, #ffd803);
-            --grain-opacity: 0.12;
+            --grain-opacity: 0.05;
             position: absolute;
             inset: 0;
-            background: var(--bg);
+            /* Semi-opaque black over the page-wide ambient smoke (fixed, -z-10):
+               the smoke still shows through but dimmed, so the hero reads in the
+               header's darker tone instead of being washed out by open smoke. */
+            background: rgba(0, 0, 0, 0.6);
             color: var(--silver);
           }
           .ah-figure { position: absolute; inset: 0; z-index: 0; }

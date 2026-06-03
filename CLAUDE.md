@@ -1,9 +1,10 @@
 # CLAUDE.md — ATQM Presentation (internal working agreement)
 
-Three-stage presentation site for **Atom Quantum (ATQM)**. One Next.js app, three routes,
-shared header. See `ARCHITECTURE.md` for the full map.
+Four-stage presentation site for **Atom Quantum (ATQM)**. One Next.js app, four routes
+(Ruliad disabled, `soon`), shared header. See `ARCHITECTURE.md` for the full map.
 
-> `areth` is the internal name for the chain — **areth == Atom Quantum (ATQM)**.
+> `areth` is the internal name for the chain — **areth == Atom Quantum (ATQM)**. Rendered
+> copy uses **"Atom Quantum"**, never "Areth".
 
 ## Stack (pinned)
 
@@ -18,6 +19,9 @@ shared header. See `ARCHITECTURE.md` for the full map.
   build-time fetch from gstatic is flaky under Turbopack and makes the build need network.
 - shadcn primitives are added by hand (the CLI registry returned 403 for `new-york-v4`); copy the
   standard component code into `components/ui/` and install only the Radix package it needs.
+- **three.js** (+ `@types/three`) is an **approved** dependency, used **only** for the Atom Boundary
+  Labs WebGL hero (lazy via `next/dynamic` `ssr:false`, client-only). Don't pull it into other
+  pages — ATQM's hero is hand-rolled Canvas 2D.
 
 ## Brand — strict
 
@@ -38,6 +42,8 @@ shared header. See `ARCHITECTURE.md` for the full map.
 - Content language for the ATQM page is **English** (matches the QLOSOPHY tone of voice).
 - ATQM copy comes **from `atqm_docs/`** — never invent figures or facts. Keep the docs'
   honest qualifiers (smoke test ≠ production; FN-DSA = draft FIPS 206; CLOB = roadmap).
+- The ATQM **product mocks** (`features/atqm/components/mocks/`) are front-end-only interactive
+  demos (type → click → `Success`), matched to Figma **Qvanta** node `16820-45026`. No backend.
 
 ## Do NOT touch
 
@@ -58,5 +64,6 @@ npm run lint     # eslint
 ## Stop and ask before
 
 - Deleting/overwriting any existing file, or editing anything under `qlosophy/`.
-- Adding a dependency beyond Next + Tailwind + shadcn + the named UI sources.
+- Adding a dependency beyond Next + Tailwind + shadcn + the named UI sources (three.js is already
+  approved, for the Atom Boundary hero only).
 - Any git commit/push.

@@ -22,7 +22,7 @@
     'linear-gradient(165deg,#103027,#05120e)',
     'linear-gradient(165deg,#2a2410,#120f05)',
   ];
-  const SHELVES = 2, PER = 8;        // defaults for gradient-clip modes
+  const SHELVES = 1, PER = 5;        // defaults for gradient-clip modes
   const rnd = (a, b) => a + Math.random() * (b - a);
 
   function clipHTML(){
@@ -39,10 +39,10 @@
   const MODES = {
     shorts: {
       label   : 'SHORTS&nbsp;FACTORY&nbsp;//&nbsp;DEVICE&nbsp;RACK&nbsp;01',
-      meta    : '<b>16</b>&nbsp;DEVICES&nbsp;·&nbsp;<b>50+</b>&nbsp;UPLOADS/DAY',
+      meta    : '<b>10</b>&nbsp;DEVICES&nbsp;·&nbsp;<b>50+</b>&nbsp;UPLOADS/DAY',
       foot    : '<span class="dot-live"></span>&nbsp;AUTO&#8209;PUBLISHING TO TIKTOK · REELS · SHORTS',
-      video   : '../IMG_5602.MOV',
-      vidCols : 8, vidRows : 2,   // 2 × 8 = 16 phones
+      video   : 'qlosophy/assets/vid-watch.mp4',
+      vidCols : 5, vidRows : 2,
     },
     stream: {
       label : 'LIVESTREAM&nbsp;OPS&nbsp;//&nbsp;DEVICE&nbsp;RACK&nbsp;01',
@@ -61,27 +61,27 @@
     },
     watch: {
       label   : 'VIDEO&nbsp;WATCH&nbsp;//&nbsp;DEVICE&nbsp;RACK&nbsp;01',
-      meta    : '<b>20</b>&nbsp;DEVICES&nbsp;·&nbsp;COMMENTING&nbsp;LIVE',
+      meta    : '<b>8</b>&nbsp;DEVICES&nbsp;·&nbsp;COMMENTING&nbsp;LIVE',
       foot    : '<span class="dot-live"></span>&nbsp;SEEDING DISCOURSE · BUILDING SIGNAL',
-      video   : '../IMG_5602.MOV',
-      vidCols : 5, vidRows : 2,   // 2 × 5 = 10 large phones
+      video   : 'qlosophy/assets/vid-watch.mp4',
+      vidCols : 4, vidRows : 2,
     },
     streams: {
       label   : 'STREAM&nbsp;WATCH&nbsp;//&nbsp;DEVICE&nbsp;RACK&nbsp;01',
-      meta    : '<b>20</b>&nbsp;DEVICES&nbsp;·&nbsp;IN&nbsp;LIVE&nbsp;CHATS',
+      meta    : '<b>8</b>&nbsp;DEVICES&nbsp;·&nbsp;IN&nbsp;LIVE&nbsp;CHATS',
       foot    : '<span class="dot-live"></span>&nbsp;REAL-TIME PRESENCE IN HIGH-TRAFFIC STREAMS',
-      video   : '../IMG_5600.MP4',
-      vidCols : 5, vidRows : 2,   // 2 × 5 = 10 large phones
+      video   : 'qlosophy/assets/vid-streams.mp4',
+      vidCols : 4, vidRows : 2,
     },
     report: {
       label : 'REPORT&nbsp;OPS&nbsp;//&nbsp;DEVICE&nbsp;RACK&nbsp;01',
-      meta  : '<b>20</b>&nbsp;DEVICES&nbsp;·&nbsp;<b>MASS</b>&nbsp;FLAGGING&nbsp;ACTIVE',
+      meta  : '<b>8</b>&nbsp;DEVICES&nbsp;·&nbsp;<b>MASS</b>&nbsp;FLAGGING&nbsp;ACTIVE',
       foot  : '<span class="dot-live"></span>&nbsp;SYNCHRONIZED REPORTS · COORDINATED FLAGGING AT SCALE',
       builder: 'report',
     },
     gen: {
       label   : 'CONTENT&nbsp;GEN&nbsp;//&nbsp;DEVICE&nbsp;RACK&nbsp;01',
-      meta    : '<b>20</b>&nbsp;DEVICES&nbsp;·&nbsp;ANY&nbsp;THEME',
+      meta    : '<b>8</b>&nbsp;DEVICES&nbsp;·&nbsp;ANY&nbsp;THEME',
       foot    : '<span class="dot-live"></span>&nbsp;ON-DEMAND NARRATIVE · MACHINE SPEED',
       builder : 'gen',
     },
@@ -103,11 +103,11 @@
         const dur   = rnd(1.8, 16).toFixed(2);
         const delay = (-rnd(0, 16)).toFixed(2);
         const dir   = Math.random() < 0.5 ? 'normal' : 'reverse';
-        html += '<div class="mphone"><div class="mreel" style="'
+        html += '<div class="mphone-wrap"><div class="mphone"><div class="mreel" style="'
           + 'animation-duration:' + dur + 's;'
           + 'animation-delay:'    + delay + 's;'
           + 'animation-direction:' + dir + '">'
-          + inner + '</div></div>';
+          + inner + '</div></div></div>';
       }
       html += '</div>';
     }
@@ -125,9 +125,9 @@
     for(let s = 0; s < rows; s++){
       html += '<div class="shelf" style="grid-template-columns:repeat(' + cols + ',1fr)">';
       for(let p = 0; p < cols; p++){
-        html += '<div class="mphone">'
+        html += '<div class="mphone-wrap"><div class="mphone">'
           + '<video class="mscreen" autoplay loop muted playsinline preload="metadata" src="' + src + '"></video>'
-          + '</div>';
+          + '</div></div>';
       }
       html += '</div>';
     }
@@ -182,7 +182,7 @@
 
   function buildReportFarm(){
     ++_token;
-    const COLS = 5, ROWS = 2;
+    const COLS = 4, ROWS = 2;
     let html = '';
     for(let s = 0; s < ROWS; s++){
       html += '<div class="shelf" style="grid-template-columns:repeat('+COLS+',1fr)">';
@@ -206,7 +206,7 @@
           + '</div>'
         ).join('');
 
-        html += '<div class="mphone"><div class="rphone-wrap">'
+        html += '<div class="mphone-wrap"><div class="mphone"><div class="rphone-wrap">'
           // nav bar
           + '<div class="rnav">'
           +   '<div class="rnav-dot" style="background:'+plat.clr+'"></div>'
@@ -241,7 +241,7 @@
           +   '<div class="rconfirm-title">Report submitted</div>'
           +   '<div class="rconfirm-sub">Thanks for helping keep the platform safe.</div>'
           + '</div>'
-          + '</div></div>';
+          + '</div></div></div>';
       }
       html += '</div>';
     }
@@ -275,7 +275,7 @@
 
   function buildGenFarm(){
     ++_token;
-    const COLS = 10, ROWS = 2;
+    const COLS = 4, ROWS = 2;
     // Shuffle order for variety on each switch
     const shuffled = GEN_GIFS.slice().sort(() => Math.random() - 0.5);
     let html = '';
@@ -285,9 +285,9 @@
       for(let p = 0; p < COLS; p++){
         const src = shuffled[idx % shuffled.length];
         idx++;
-        html += '<div class="mphone">'
+        html += '<div class="mphone-wrap"><div class="mphone">'
           + '<img class="mscreen gif-screen" src="' + src + '" alt="" loading="lazy">'
-          + '</div>';
+          + '</div></div>';
       }
       html += '</div>';
     }

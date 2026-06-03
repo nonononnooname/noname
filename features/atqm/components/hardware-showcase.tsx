@@ -79,7 +79,7 @@ export function HardwareShowcase() {
           {/* The exported wordmark already bakes in the tagline below ATOM. */}
           <Image
             src="/products/atom-wordmark.png"
-            alt={`ATOM — ${HARDWARE.tagline}`}
+            alt={`ATOM ${HARDWARE.tagline}`}
             width={760}
             height={180}
             sizes="(max-width: 640px) 78vw, 560px"

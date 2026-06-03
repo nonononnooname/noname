@@ -95,7 +95,7 @@ export function SiteHeader() {
       >
         <Link
           href="/atqm"
-          aria-label="ATQM — home"
+          aria-label="ATQM home"
           className="flex items-center"
           onClick={() => setOpen(false)}
         >

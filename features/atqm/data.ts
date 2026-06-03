@@ -93,7 +93,7 @@ export const PRODUCTS: { intro: string; items: Product[] } = {
       key: "dex",
       name: "DEX",
       tagline: "Swap & trade",
-      body: "Trade any ecosystem asset with settlement you can trust. Every order is authorized with an ML-DSA signature and clears against the same block-bound finality as the chain itself.",
+      body: "Swap assets on Atom Quantum, the post-quantum L1. Every order is PQ-signed end to end, and every fill settles in the same finalized block that matched it, with no trusted sequencer and no reorg risk.",
       features: [
         "One-click swaps with live, PQ-signed quotes",
         "Slippage, rate and gas shown before you sign",
@@ -104,7 +104,7 @@ export const PRODUCTS: { intro: string; items: Product[] } = {
       key: "staking",
       name: "Staking",
       tagline: "Stake & earn",
-      body: "Stake QANT to help secure HotStuff finality and earn protocol rewards. Validator and delegator signatures are pure ML-DSA, with no BLS aggregation and no pairing-based assumptions to break.",
+      body: "Stake ATQM to help secure Atom Quantum and earn protocol rewards. Validators sign with post-quantum ML-DSA keys; misbehavior is slashed on-chain. Unstaking requires a cooldown.",
       features: [
         "Live APR, max-slashing and balance at a glance",
         "Transparent cooldown before you unstake",
@@ -115,7 +115,7 @@ export const PRODUCTS: { intro: string; items: Product[] } = {
       key: "bridge",
       name: "Bridge",
       tagline: "Cross-chain",
-      body: "Move assets between ATQM and the chains you already use. Cross-chain messages are anchored to finalized blocks and verified end to end with post-quantum signatures.",
+      body: "Move your assets onto Atom Quantum, the post-quantum L1. Bridge from Ethereum and start transacting with PQ-secured finality.",
       features: [
         "Pick source and destination chain in one view",
         "Quoted amount, fees and address upfront",
@@ -127,7 +127,7 @@ export const PRODUCTS: { intro: string; items: Product[] } = {
       name: "Hardware Wallet",
       short: "Hardware",
       tagline: "Cold storage · post-quantum",
-      body: "Built on NIST post-quantum cryptography to protect your keys against today's threats and tomorrow's quantum ones. Keys are generated on the device and ML-DSA signing runs there too, so they never leave the secure element in cleartext.",
+      body: "Built on post-quantum cryptography: ML-DSA signatures, not the elliptic curves a quantum computer breaks. Your keys stay sealed in a secure enclave and never leave in cleartext.",
       features: [
         "Air-gapped post-quantum secure element",
         "On-device ML-DSA signing, keys never exported",
@@ -139,7 +139,7 @@ export const PRODUCTS: { intro: string; items: Product[] } = {
       name: "Companion App",
       short: "Companion",
       tagline: "Mobile · iOS & Android",
-      body: "Take control of your assets from the companion app: watch the market, track your balance, and trade with a tap. Every action is confirmed on the paired Hardware Wallet.",
+      body: "Take full control of your assets from the companion app. Track balances, watch the market, and send or receive with a tap. Every transaction PQ-signed.",
       features: [
         "Live portfolio, NFTs and qubit assets in one view",
         "Trade and send, signed on the paired device",
@@ -350,7 +350,7 @@ export const ROADMAP = {
   steps: [
     { phase: "ATQM crate development", when: "Q1–Q2 2026", status: "Done" },
     { phase: "Smoke runs: 300+ blocks, 4 validators", when: "Q1 2026", status: "Done (code-correctness signal)" },
-    { phase: "Production-scale testing: 50+ validators", when: "—", status: "Upcoming" },
+    { phase: "Production-scale testing: 50+ validators", when: "TBD", status: "Upcoming" },
     { phase: "Testnet", when: "June 2026", status: "Launch" },
     { phase: "External crypto / security audit", when: "Before mainnet", status: "Mainnet precondition" },
     { phase: "Mainnet", when: "After testnet + audit", status: "Planned" },
@@ -365,7 +365,7 @@ export const ROADMAP = {
 
 export const PITCH = {
   quote:
-    "ATQM is what Ethereum's execution stack would look like if you replaced every signature, key exchange, and consensus message with NIST-standardized post-quantum primitives — and bolted it onto HotStuff finality instead of Gasper — without throwing away a decade of Reth engineering.",
+    "ATQM rebuilds Ethereum's execution stack on NIST-standardized post-quantum primitives. It replaces every signature, key exchange, and consensus message, runs HotStuff finality instead of Gasper, and keeps a decade of Reth engineering.",
   tagline: "EVM where it counts. New cryptography everywhere else.",
   domain: "atqm.network",
 };

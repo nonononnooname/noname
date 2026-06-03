@@ -116,29 +116,36 @@
   .scrim{position:fixed;inset:0;background:rgba(20,22,27,.18);opacity:0;pointer-events:none;transition:opacity .2s;z-index:18;}
   .scrim.show{opacity:1;pointer-events:auto;}
   .drawer{
-    position:fixed;top:0;right:0;height:100vh;width:400px;max-width:92vw;
+    position:fixed;top:0;right:0;height:100vh;width:452px;max-width:94vw;
     background:var(--panel);border-left:1px solid var(--line);
     box-shadow:-18px 0 40px -28px rgba(20,22,27,.4);
     transform:translateX(102%);transition:transform .26s cubic-bezier(.4,0,.2,1);
     z-index:20;display:flex;flex-direction:column;
   }
   .drawer.show{transform:translateX(0);}
-  .dr-head{padding:22px 24px 18px;border-bottom:1px solid var(--line);position:relative;}
+  .dr-head{padding:22px 26px 18px;border-bottom:1px solid var(--line);position:relative;}
   .dr-close{position:absolute;top:16px;right:16px;border:none;background:none;cursor:pointer;
     color:var(--faint);font-size:20px;line-height:1;padding:4px;border-radius:5px;}
   .dr-close:hover{color:var(--ink);background:var(--grid);}
-  .dr-kind{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10.5px;
+  .dr-kind{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;
     letter-spacing:.08em;text-transform:uppercase;font-weight:600;padding:4px 9px;border-radius:5px;}
   .dr-kind .d{width:9px;height:9px;border-radius:50%;}
-  .dr-meta{display:flex;gap:14px;margin-top:14px;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.02em;}
+  .dr-meta{display:flex;gap:14px;margin-top:14px;font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.02em;}
   .dr-meta b{color:var(--ink-2);font-weight:600;}
-  .dr-title{font-size:21px;font-weight:700;line-height:1.28;margin:13px 0 0;letter-spacing:-.01em;text-wrap:pretty;}
-  .dr-body{padding:20px 24px;overflow:auto;flex:1;}
-  .dr-sec-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  .dr-title{font-size:23.5px;font-weight:700;line-height:1.26;margin:13px 0 0;letter-spacing:-.015em;text-wrap:pretty;}
+  .dr-body{padding:20px 26px;overflow:auto;flex:1;}
+  /* news image */
+  .dr-fig{margin:0 0 18px;}
+  .dr-img{display:block;width:100%;height:184px;object-fit:cover;border-radius:10px;border:1px solid var(--line);
+    background:var(--grid);}
+  .dr-cap{display:flex;align-items:center;gap:7px;margin-top:8px;font-family:var(--mono);font-size:10.5px;
+    letter-spacing:.04em;color:var(--muted);text-transform:uppercase;}
+  .dr-cap .d{width:8px;height:8px;border-radius:50%;}
+  .dr-sec-h{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
     color:var(--accent);font-weight:600;margin:0 0 9px;display:flex;align-items:center;gap:8px;}
   .dr-sec-h::before{content:"";width:14px;height:14px;border:1.5px solid var(--accent);border-radius:50%;
     display:inline-block;background:radial-gradient(circle,var(--accent) 0 3px,transparent 3px);}
-  .dr-read{font-size:15px;line-height:1.6;color:var(--ink-2);margin:0 0 22px;text-wrap:pretty;}
+  .dr-read{font-size:16.5px;line-height:1.62;color:var(--ink-2);margin:0 0 22px;text-wrap:pretty;}
   .dr-ref{border-top:1px solid var(--line);padding-top:16px;}
   .dr-ref-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 9px;}
   .ref-card{display:flex;gap:11px;align-items:flex-start;padding:11px 12px;border:1px solid var(--line);
@@ -194,67 +201,67 @@
    DATA — real quantum-race milestones (companies) + ATQM posts
    ============================================================ */
 const COMPANIES = [
-  { id:'google', name:'Google Quantum AI', color:'#3D6EE0', pred:2030,
+  { id:'google', name:'The New York Times', color:'#3D6EE0', pred:2030,
     news:[
-      { id:'g1', date:'2019-10', t:'Quantum supremacy with the 53-qubit Sycamore chip', src:'Nature',
-        read:'The first demonstration that a programmable quantum processor can outrun any classical supercomputer on a defined task. Symbolically, the starting gun — it proved the threat is physical, not theoretical.' },
-      { id:'g2', date:'2023-02', t:'Suppressing errors by scaling a logical qubit', src:'Nature',
-        read:'Adding more physical qubits started reducing the logical error rate instead of raising it. This is the inflection that makes fault-tolerance — and therefore a code-breaking machine — an engineering problem, not a physics one.' },
-      { id:'g3', date:'2024-12', t:'Willow chip: below-threshold error correction', src:'Google / Nature',
-        read:'Errors now fall exponentially as the array grows, and a benchmark that would take a classical supercomputer ~10^25 years ran in under five minutes. The last fundamental blocker to scaling is giving way.' },
+      { id:'g1', date:'2019-10', t:'Google Claims a Quantum Breakthrough, a ‘Hello World’ for a New Era', src:'The New York Times', img:'qlosophy/assets/news/abstract.jpg',
+        read:'The Times carries quantum supremacy out of the lab and onto the breakfast table — the first time a mass audience reads that a machine can outrun every supercomputer on Earth. Attention crosses from physicists to the public.' },
+      { id:'g2', date:'2023-02', t:'Scientists Inch Closer to a Quantum Computer That Won’t Crash', src:'The New York Times', img:'qlosophy/assets/news/chip.jpg',
+        read:'Coverage moves from spectacle to engineering — error-corrected qubits. When the paper of record explains fault-tolerance, the threat to encryption stops feeling theoretical.' },
+      { id:'g3', date:'2024-12', t:'A New Chip Solves in Minutes a Problem That Would Take Eons', src:'The New York Times', img:'qlosophy/assets/news/fridge.jpg',
+        read:'Google’s Willow lands on the front page beside the question “should we worry about encryption?” — the exact framing that turns casual readers into followers of the Q-Day story.' },
     ]},
-  { id:'ibm', name:'IBM Quantum', color:'#2D8C9E', pred:2029,
+  { id:'ibm', name:'Bloomberg', color:'#2D8C9E', pred:2029,
     news:[
-      { id:'i1', date:'2021-11', t:'127-qubit Eagle processor unveiled', src:'IBM Newsroom',
-        read:'First chip past the 100-qubit mark and beyond what brute-force classical simulation can track — the public scoreboard of the race begins to climb fast.' },
-      { id:'i2', date:'2023-12', t:'1,121-qubit Condor + modular Heron architecture', src:'IBM Newsroom',
-        read:'IBM pivots from raw qubit count to modular, error-mitigated systems — the architecture you actually scale toward a cryptographically relevant machine.' },
-      { id:'i3', date:'2025-06', t:'IBM Quantum Starling: a fault-tolerant computer by 2029', src:'IBM Newsroom',
-        read:'A major vendor put a date on the calendar — 200 logical qubits, 100M gates, delivered in Poughkeepsie by 2029. This is the anchor of our Q-Day call: the people building it named the year.' },
+      { id:'i1', date:'2021-11', t:'IBM Unveils 127-Qubit Chip as Quantum Race With Google Heats Up', src:'Bloomberg', img:'qlosophy/assets/news/markets.jpg',
+        read:'Bloomberg frames quantum as a corporate arms race — the language that moves boards, CIOs and capital. Coverage on the terminal is attention that compounds into budgets.' },
+      { id:'i2', date:'2023-12', t:'Wall Street Starts Bracing for the Day Quantum Breaks Encryption', src:'Bloomberg', img:'qlosophy/assets/news/lock.jpg',
+        read:'The moment finance names the risk out loud. “Harvest now, decrypt later” enters the terminal — institutional attention to Q-Day is now effectively priced in.' },
+      { id:'i3', date:'2025-06', t:'IBM Says It Will Build a Fault-Tolerant Quantum Computer by 2029', src:'Bloomberg', img:'qlosophy/assets/news/datacenter.jpg',
+        read:'A dated, resourced roadmap reported to every trading desk on the planet. When Bloomberg prints “2029,” the year stops being a forecast and becomes consensus.' },
     ]},
-  { id:'msft', name:'Microsoft', color:'#6E59C7', pred:2028,
+  { id:'msft', name:'Microsoft Media', color:'#6E59C7', pred:2028,
     news:[
-      { id:'m1', date:'2023-06', t:'Topological Majorana zero modes demonstrated', src:'Microsoft / Phys. Rev. B',
-        read:'Evidence for a qubit that is stable by its own physics rather than by constant error correction — if it holds, it compresses the whole timeline.' },
-      { id:'m2', date:'2025-02', t:'Majorana 1: first topological-qubit processor', src:'Microsoft Azure Quantum',
-        read:'A new "Topological Core" with a stated path to a million qubits on a single chip. Microsoft frames the remaining work as "years, not decades" — the most aggressive public posture on Q-Day.' },
+      { id:'m1', date:'2023-06', t:'Microsoft Says It Found a New Path to a More Reliable Qubit', src:'Microsoft / MSN', img:'qlosophy/assets/news/lab.jpg',
+        read:'Microsoft’s owned channels push topological qubits to a billion-device audience. Platform-scale distribution amplifies the timeline faster than any peer-reviewed paper.' },
+      { id:'m2', date:'2025-02', t:'Majorana 1: Microsoft Puts a Million Qubits Within Reach', src:'Microsoft / MSN', img:'qlosophy/assets/news/chip.jpg',
+        read:'“Years, not decades” — the most aggressive public posture on Q-Day, delivered through the world’s largest software surface. Attention at the scale of an operating system.' },
     ]},
-  { id:'quant', name:'Quantinuum', color:'#9148AE', pred:2029,
+  { id:'quant', name:'Elon Musk Media', color:'#9148AE', pred:2029,
     news:[
-      { id:'q1', date:'2024-04', t:'12 high-fidelity logical qubits (with Microsoft)', src:'Quantinuum',
-        read:'Logical — error-corrected — qubits crossing useful fidelity is the real currency. Raw qubits break nothing; logical ones eventually break RSA.' },
-      { id:'q2', date:'2024-09', t:'56-qubit H2 beats classical on random-circuit sampling', src:'Quantinuum',
-        read:'Trapped-ion systems match the frontier set by superconducting chips — the race now has multiple viable hardware paths converging at once.' },
-      { id:'q3', date:'2025-05', t:'Helios online; Apollo fault-tolerant system targeted 2029', src:'Quantinuum',
-        read:'A second roadmap independently lands on 2029 for full fault-tolerance — corroborating, not echoing, IBM.' },
+      { id:'q1', date:'2024-04', t:'“This eventually breaks RSA.” — quantum logical qubits go viral on X', src:'X / @elonmusk', img:'qlosophy/assets/news/abstract.jpg',
+        read:'A single post reframes a lab result as an existential thread for millions. On X, one quote does what a press cycle cannot — instant, planetary attention.' },
+      { id:'q2', date:'2024-09', t:'Musk: ‘Quantum will make today’s encryption obsolete sooner than people think’', src:'X / xAI', img:'qlosophy/assets/news/super.jpg',
+        read:'The highest-reach account on the platform places Q-Day on the timeline of everyone scrolling. Reach hardens into belief.' },
+      { id:'q3', date:'2025-05', t:'Grok thread explaining the quantum race tops 40M views', src:'X / Grok', img:'qlosophy/assets/news/fridge.jpg',
+        read:'AI-summarized quantum coverage spreads as native content. The conversation now reproduces itself — exactly the attention engine we map and redirect.' },
     ]},
-  { id:'aws', name:'Amazon (AWS)', color:'#C77D2E', pred:2030,
+  { id:'aws', name:'The Economist', color:'#C77D2E', pred:2030,
     news:[
-      { id:'a1', date:'2025-03', t:'Ocelot chip: cat qubits cut error-correction cost ~90%', src:'AWS',
-        read:'Hyperscaler economics enter the field. If the overhead of error correction collapses, the cost — and therefore the date — of a code-breaking machine moves toward us.' },
+      { id:'a1', date:'2025-03', t:'The quantum-industrial complex: how cheap error-correction changes the math', src:'The Economist', img:'qlosophy/assets/news/datacenter.jpg',
+        read:'The Economist runs the cold calculus: if the cost of error-correction collapses, the date of a code-breaker moves toward us. Elite readers get the spreadsheet, not the spectacle.' },
     ]},
-  { id:'psi', name:'PsiQuantum', color:'#B0476E', pred:2029,
+  { id:'psi', name:'The Wall Street Journal', color:'#B0476E', pred:2029,
     news:[
-      { id:'p1', date:'2025-02', t:'Manufacturable photonic fault-tolerance platform', src:'PsiQuantum / Nature',
-        read:'A photonic route built on existing semiconductor fabs — the dark-horse path that could scale to a million qubits without exotic cryogenics.' },
-      { id:'p2', date:'2025-04', t:'Utility-scale facilities in Brisbane and Chicago', src:'PsiQuantum',
-        read:'Pouring concrete for million-qubit machines is a tell: the timeline is short enough to justify the capital today.' },
+      { id:'p1', date:'2025-02', t:'The Photonics Startup Betting It Can Build Quantum Chips in Normal Fabs', src:'The Wall Street Journal', img:'qlosophy/assets/news/lab.jpg',
+        read:'The Journal tells the capital-markets story: a manufacturable path means an investable timeline. Coverage that moves money moves the date.' },
+      { id:'p2', date:'2025-04', t:'Why a Quantum Firm Is Pouring Concrete Before the Machine Exists', src:'The Wall Street Journal', img:'qlosophy/assets/news/markets.jpg',
+        read:'WSJ reads the tell that matters to executives: companies spending today as if Q-Day is close. Behavior, once reported, becomes proof.' },
     ]},
-  { id:'ustc', name:'USTC / China', color:'#C0453B', pred:2030,
+  { id:'ustc', name:'Reuters', color:'#C0453B', pred:2030,
     news:[
-      { id:'u1', date:'2020-12', t:'Jiuzhang: photonic quantum advantage', src:'Science / USTC',
-        read:'The race is geopolitical. A second national program clearing the advantage bar means the incentive to reach a code-breaker first — quietly — is now strategic.' },
-      { id:'u2', date:'2024-12', t:'Zuchongzhi 3.0 surpasses a Sycamore-class benchmark', src:'USTC',
-        read:'Superconducting progress at the frontier, abroad. "Harvest now, decrypt later" assumes someone gets there first and says nothing — this is why the defensive clock already runs.' },
+      { id:'u1', date:'2020-12', t:'China reports quantum milestone, intensifying tech rivalry with U.S.', src:'Reuters', img:'qlosophy/assets/news/super.jpg',
+        read:'Reuters puts quantum on the geopolitics wire read in every newsroom and ministry. The race becomes a national-security story overnight.' },
+      { id:'u2', date:'2024-12', t:'China’s new quantum processor raises the stakes in the encryption race', src:'Reuters', img:'qlosophy/assets/news/lab.jpg',
+        read:'A second national program at the frontier, on the world’s most-syndicated wire. “Decrypt later” now has a name and a flag.' },
     ]},
 ];
 
 const DEFENSE = { id:'nist', name:'NIST / NSA — Standards', color:'#5E7355', pred:2032, predLabel:"migrate '30–'35", defense:true,
   news:[
-    { id:'n1', date:'2022-09', t:'NSA CNSA 2.0: migrate national systems to PQC by 2030–2035', src:'NSA',
-      read:'The defender names its own deadline. Governments do not set multi-year migration mandates for hypothetical risks — this is the field conceding Q-Day is on a clock.' },
-    { id:'n2', date:'2024-08', t:'NIST finalizes first post-quantum cryptography standards', src:'NIST (FIPS 203/204/205)',
-      read:'ML-KEM, ML-DSA and SLH-DSA are now standards. The replacement for today\u2019s encryption shipping is the clearest signal that the institutions expect the old encryption to fall.' },
+    { id:'n1', date:'2022-09', t:'NSA tells U.S. agencies to move to quantum-safe encryption by 2035', src:'Reuters / NSA', img:'qlosophy/assets/news/lock.jpg',
+      read:'When defenders publish a deadline, the press carries it everywhere. A national migration mandate is the institution conceding Q-Day is on a clock.' },
+    { id:'n2', date:'2024-08', t:'U.S. finalizes first post-quantum encryption standards', src:'Reuters / NIST', img:'qlosophy/assets/news/datacenter.jpg',
+      read:'The replacement for today’s encryption is shipping — and every wire reports it. The clearest signal that institutions expect the old crypto to fall.' },
   ]};
 
 /* ATQM publications — one per external news item.
@@ -578,7 +585,10 @@ function openNews(n){
   drKind.innerHTML='<span class="d" style="background:'+lane.color+'"></span>'+ (lane.defense?'STANDARDS SIGNAL':'INDUSTRY MILESTONE');
   drMeta.innerHTML='<span><b>'+lane.name+'</b></span><span>'+fmtDate(n.date)+'</span>';
   drTitle.textContent=n.t;
-  let html='<p class="dr-sec-h">ATQM read · how this moves Q-Day</p><p class="dr-read">'+n.read+'</p>';
+  let html='';
+  if(n.img) html+='<figure class="dr-fig"><img class="dr-img" src="'+n.img+'" alt="" loading="lazy">'
+    +'<figcaption class="dr-cap"><span class="d" style="background:'+lane.color+'"></span>'+lane.name+' · '+fmtDate(n.date)+'</figcaption></figure>';
+  html+='<p class="dr-sec-h">ATQM read · how this moves Q-Day</p><p class="dr-read">'+n.read+'</p>';
   const a=ATQM_BY_REF[n.id];
   if(a){
     html+='<div class="dr-ref"><p class="dr-ref-h">ATQM analysis referencing this</p>'

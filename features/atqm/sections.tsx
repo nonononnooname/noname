@@ -192,7 +192,7 @@ export function PqPrimitives() {
               </Card>
             ))}
             <p className="text-xs leading-relaxed text-muted-foreground">
-              Threshold-of-N accounts are first-class today — multi-device
+              Threshold-of-N accounts are first-class today: multi-device
               authorization with no smart-contract gymnastics.
             </p>
           </div>
@@ -227,7 +227,7 @@ export function Transactions() {
       <Reveal delay={120}>
         <div className="mt-10">
           <p className="mb-4 font-ui text-xs uppercase tracking-wider text-muted-foreground">
-            Signature size — the honest trade-off
+            Signature size, the honest trade-off
           </p>
           <div className="grid gap-px overflow-hidden rounded-card border border-border sm:grid-cols-3">
             {TRANSACTIONS.sizes.map((s) => (

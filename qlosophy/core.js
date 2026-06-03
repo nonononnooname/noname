@@ -68,8 +68,18 @@
       const caret='<span class="tw-caret">▍</span>';
       const id=setInterval(()=>{
         i++; body.innerHTML=text.slice(0,i).replace(/</g,'&lt;')+caret;
-        if(i>=text.length){ clearInterval(id); setTimeout(()=>{body.innerHTML=text.replace(/</g,'&lt;');},1400); }
+        if(i>=text.length){ clearInterval(id); setTimeout(()=>{body.innerHTML=hl(text);},1400); }
       },16);
+    }
+    function hl(t){
+      let h=t.replace(/</g,'&lt;');
+      [['inevitable paradigm shift'],['classical cryptography']].forEach(([p])=>{
+        h=h.replace(p,'<span class="s2-mark">'+p+'</span>');
+      });
+      ['aggregate the attention','We do not sell panic.'].forEach(p=>{
+        h=h.replace(p,'<span class="s2-hl">'+p+'</span>');
+      });
+      return h;
     }
   }
 
@@ -134,8 +144,12 @@
     for(let i=0;i<N;i++){
       const y=1-(i/(N-1))*2; const r=Math.sqrt(1-y*y);
       const th=i*2.39996323;
-      pts.push({x:Math.cos(th)*r,y:y,z:Math.sin(th)*r,
-        ox:(Math.random()-.5),oy:(Math.random()-.5),oz:(Math.random()-.5),seed:Math.random()});
+      const bx=Math.cos(th)*r, by=y, bz=Math.sin(th)*r;
+      // 60% outward (natural expansion) + 40% random (organic chaos)
+      const rx=(Math.random()-.5)*0.8, ry=(Math.random()-.5)*0.8, rz=(Math.random()-.5)*0.8;
+      pts.push({x:bx,y:by,z:bz,
+        ox:bx*0.6+rx, oy:by*0.6+ry, oz:bz*0.6+rz,
+        seed:Math.random()});
     }
   }
   function sizeSphere(){ if(!sc)return; const w=sc.clientWidth||sc.offsetWidth||400, h=sc.clientHeight||400;
@@ -166,46 +180,73 @@
     const W=sc.width,H=sc.height; sctx.clearRect(0,0,W,H);
     if(!sphereVisible) return;
     const cx=W/2, cy=H/2, R=Math.min(W,H)*0.34;
-    rot+=0.0026;
-    const p=sProg, disp=p*p, breaking=p>0.18;
-    // quantum rays when breaking
-    if(breaking){
-      sctx.save(); sctx.globalAlpha=Math.min(.5,(p-0.18)*1.1);
-      for(let k=0;k<5;k++){
-        const ang=rot*2+k*1.257; const len=Math.max(W,H);
-        sctx.strokeStyle='rgba(255,107,74,.5)'; sctx.lineWidth=1*dpr;
-        sctx.beginPath(); sctx.moveTo(cx+Math.cos(ang)*-len,cy+Math.sin(ang)*-len);
-        sctx.lineTo(cx+Math.cos(ang)*len,cy+Math.sin(ang)*len); sctx.stroke();
-      }
-      sctx.restore();
+    const p=sProg;
+    // subtly accelerate spin as decoherence grows
+    rot += 0.0026 + p*0.007;
+
+    // soft threat aura — replaces harsh crossing lines
+    if(p>0.1){
+      const aS=Math.min(1,(p-0.1)/0.6);
+      const aSSmooth=aS*aS*(3-2*aS);
+      const aura=sctx.createRadialGradient(cx,cy,R*0.2,cx,cy,R*2.0);
+      aura.addColorStop(0,'rgba(255,90,50,0)');
+      aura.addColorStop(0.45,'rgba(255,90,50,'+(0.055*aSSmooth)+')');
+      aura.addColorStop(1,'rgba(255,90,50,0)');
+      sctx.fillStyle=aura; sctx.fillRect(0,0,W,H);
     }
+
+    const cosR=Math.cos(rot),sinR=Math.sin(rot);
     for(const pt of pts){
+      // per-particle decoherence threshold — staggered from p≈0.07 to p≈0.72
+      const thr=pt.seed*0.65+0.07;
+      const rawPP=Math.max(0,(p-thr)/0.32);
+      const pp=Math.min(1,rawPP);
+      // smoothstep easing so each particle has a silky own curve
+      const ppS=pp*pp*(3-2*pp);
+
       // rotate around Y
-      const cosR=Math.cos(rot),sinR=Math.sin(rot);
       let x=pt.x*cosR - pt.z*sinR;
       let z=pt.x*sinR + pt.z*cosR;
       let y=pt.y;
-      // decoherence: push outward + jitter
-      const jit=(Math.sin(rot*3+pt.seed*9))*disp*0.5;
-      x += pt.ox*disp*2.4 + jit*pt.ox;
-      y += pt.oy*disp*2.4 + jit*pt.oy;
-      z += pt.oz*disp*2.4;
-      const scale=1/(2.2 - z); // perspective
-      const sx=cx + x*R*scale*1.0;
-      const sy=cy + y*R*scale*1.0;
+
+      // organic jitter: low-freq breathing + high-freq fracture
+      const breath=Math.sin(rot*1.9+pt.seed*6.28)*0.05*ppS;
+      const frac  =Math.sin(rot*7.3+pt.seed*21.7)*ppS*0.28;
+      x += pt.ox*ppS*2.8 + frac*pt.ox + breath*pt.x;
+      y += pt.oy*ppS*2.8 + frac*pt.oy + breath*pt.y;
+      z += pt.oz*ppS*2.8;
+
+      const scale=1/(2.2-z);
+      const sx=cx+x*R*scale;
+      const sy=cy+y*R*scale;
       const depth=(z+1)/2;
-      const baseA=(0.25+depth*0.75)*(1-p*0.55);
-      // color: neon → threat as it breaks
-      const g=Math.round(185 - p*120), rr=Math.round(16 + p*239), b=Math.round(129 - p*55);
-      sctx.fillStyle='rgba('+rr+','+g+','+b+','+baseA+')';
-      const rad=(0.8+depth*1.6)*dpr;
+
+      // opacity: fully coherent particles keep brightness; breaking ones fade out
+      const fadeOut=ppS>0.68 ? 1-((ppS-0.68)/0.32) : 1;
+      const baseA=(0.28+depth*0.72)*fadeOut*(1-p*0.28);
+      if(baseA<=0.01) continue;
+
+      // per-particle color: neon-green → orange-red as THAT particle breaks
+      const cr=Math.round(16  + (255-16 )*ppS);
+      const cg=Math.round(245 + (80-245 )*ppS);
+      const cb=Math.round(160 + (50-160 )*ppS);
+      sctx.fillStyle='rgba('+cr+','+cg+','+cb+','+baseA+')';
+      const rad=(0.8+depth*1.6)*dpr*(1+ppS*0.4);
       sctx.beginPath(); sctx.arc(sx,sy,rad,0,6.283); sctx.fill();
     }
-    // core glow
-    if(p<0.6){
-      const gg=sctx.createRadialGradient(cx,cy,0,cx,cy,R*0.5);
-      gg.addColorStop(0,'rgba(52,245,160,'+(0.18*(1-p))+')'); gg.addColorStop(1,'rgba(52,245,160,0)');
-      sctx.fillStyle=gg; sctx.fillRect(0,0,W,H);
+
+    // core glow: green → slowly transitions to faint orange residue
+    if(p<0.85){
+      const t=Math.min(1,p/0.6);
+      const tS=t*t*(3-2*t);
+      const gr=Math.round(52  + (220-52 )*tS);
+      const gg2=Math.round(245 + (70-245)*tS);
+      const gb=Math.round(160 + (40-160)*tS);
+      const intens=(p<0.5) ? 0.18*(1-p) : 0.09*(0.85-p)/0.35;
+      const glow=sctx.createRadialGradient(cx,cy,0,cx,cy,R*0.52);
+      glow.addColorStop(0,'rgba('+gr+','+gg2+','+gb+','+Math.max(0,intens)+')');
+      glow.addColorStop(1,'rgba('+gr+','+gg2+','+gb+',0)');
+      sctx.fillStyle=glow; sctx.fillRect(0,0,W,H);
     }
   }
 

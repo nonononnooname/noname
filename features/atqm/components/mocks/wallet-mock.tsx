@@ -13,14 +13,14 @@ import { CoinBadge, Sparkline } from "./mock-ui";
 const ASSETS = [
   { name: "Bitcoin", sym: "BTC", chg: "+0.67%", up: true, amt: "12.014" },
   { name: "Ethereum", sym: "ETH", chg: "-0.39%", up: false, amt: "40.681" },
-  { name: "Neo", sym: "NEO", chg: "+1.14%", up: true, amt: "68.501" },
+  { name: "Atom Quantum", sym: "ATQM", chg: "+1.14%", up: true, amt: "68.501" },
   { name: "Dogecoin", sym: "DOGE", chg: "-0.39%", up: false, amt: "114.29" },
 ] as const;
 
 const TABS = [
   { label: "Crypto", active: true },
   { label: "NFTs", active: false },
-  { label: "Qubits", active: false },
+  { label: "Super-conducting Qubits", active: false },
 ] as const;
 
 /** Wallet — mobile portfolio screen (Figma: APP / APP W). */

@@ -175,7 +175,7 @@
   qLabel.setAttribute('font-weight','700');
   qLabel.setAttribute('letter-spacing','3.5');
   qLabel.setAttribute('fill','rgba(52,245,160,.92)');
-  qLabel.textContent = 'QLOSOPHY';
+  qLabel.textContent = 'ORACLE';
   svg.appendChild(qLabel);
 
   // Published counter below label
@@ -214,12 +214,12 @@
     const anchor = (n.x < CX - 15) ? 'end' : (n.x > CX + 15) ? 'start' : 'middle';
     const t = document.createElementNS(NS,'text');
     t.setAttribute('x', lx); t.setAttribute('y', ly);
-    t.setAttribute('font-size','8');
+    t.setAttribute('font-size','7.5');
     t.setAttribute('font-family','JetBrains Mono, monospace');
-    t.setAttribute('fill','rgba(52,245,160,.35)');
-    t.setAttribute('letter-spacing','1.5');
+    t.setAttribute('fill','rgba(52,245,160,.48)');
+    t.setAttribute('letter-spacing','0.8');
     t.setAttribute('text-anchor', anchor);
-    t.textContent = n.c;
+    t.textContent = n.label;
     svg.appendChild(t);
   });
 
@@ -270,7 +270,7 @@
     svg.insertBefore(tail, head);
 
     const x0 = node.x, y0 = node.y, cpX = node.cpX, cpY = node.cpY;
-    const totalSteps = 55 + Math.floor(Math.random()*18);
+    const totalSteps = 28 + Math.floor(Math.random()*10);
     const tailLag = 7;
     let step = 0;
 
@@ -360,7 +360,7 @@
     const sy = node.y + Math.sin(ang) * 22;
 
     const cpX = node.cpX, cpY = node.cpY;
-    const totalSteps = 72 + Math.floor(Math.random() * 22);
+    const totalSteps = 36 + Math.floor(Math.random() * 12);
     let step = 0;
 
     function bez(t){
@@ -408,7 +408,7 @@
     if(Math.random() < 0.5){
       const tag = rand(OK_TAGS);
       line('<span class="t-ok">'+tag+'</span> source #'+(1000+Math.floor(Math.random()*9000))+' · '+node.label);
-      fireNewsChip(node, tag + ' · ' + node.c, false);
+      fireNewsChip(node, tag + ' · ' + node.label, false);
       if(Math.random() < 0.45) fireParticle(node, false);
     } else {
       const e = rand(ENTITIES), v = rand(VERBS);
@@ -438,7 +438,7 @@
         if(term && term.children.length===0){
           line('<span class="t-ok">SEMANTIC ORACLE</span> stream attached · listening…');
         }
-        start(1700); running=true;
+        start(800); running=true;
       } else if(!e.isIntersecting){ stop(); running=false; }
     });
   },{threshold:.25}).observe(document.getElementById('s4'));
@@ -463,7 +463,7 @@
       }, 2200);
 
       setTimeout(()=>{
-        start(1700); if(mSig) mSig.textContent = '12';
+        start(800); if(mSig) mSig.textContent = '12';
         running = false; runBtn.disabled = false; runBtn.innerHTML = old;
       }, 3800);
     });
