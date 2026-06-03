@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ATQM — Q-Day Convergence Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#F3F4F7;
+    --panel:#FFFFFF;
+    --ink:#15171C;
+    --ink-2:#3A3F4B;
+    --muted:#6B7280;
+    --faint:#9AA1AE;
+    --line:#E1E4EA;
+    --grid:#EAECF1;
+    --grid-2:#F1F3F6;
+    --accent:#E5484D;       /* Q-Day / ATQM */
+    --accent-soft:#FBE7E7;
+    --sans:'IBM Plex Sans',system-ui,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;
+  }
+  .app{display:flex;flex-direction:column;height:100vh;}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    flex:0 0 auto;
+    background:var(--panel);
+    border-bottom:1px solid var(--line);
+    padding:14px 26px 13px;
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    align-items:center;
+    column-gap:30px;
+    z-index:5;
+  }
+  .brand{display:flex;align-items:baseline;gap:10px;}
+  .brand .mark{
+    font-family:var(--mono);font-weight:600;font-size:18px;letter-spacing:.06em;
+    color:var(--ink);
+    border:1.5px solid var(--ink);border-radius:5px;padding:2px 8px;line-height:1;
+  }
+  .brand .name{font-weight:700;font-size:16px;letter-spacing:.01em;}
+  .brand .sub{font-size:13px;color:var(--muted);font-weight:500;}
+  .thesis{
+    margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.45;max-width:620px;
+    justify-self:start;
+  }
+  .thesis b{color:var(--accent);font-weight:600;}
+  .controls{display:flex;align-items:center;gap:8px;justify-self:end;}
+  .ctl{
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.03em;
+    border:1px solid var(--line);background:#FBFBFC;color:var(--muted);
+    padding:6px 11px;border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:7px;
+    transition:all .15s;user-select:none;white-space:nowrap;
+  }
+  .ctl:hover{border-color:#C9CEDA;color:var(--ink-2);}
+  .ctl .sw{width:9px;height:9px;border-radius:2px;background:#C2C7D2;}
+  .ctl.on{background:#fff;color:var(--ink);border-color:#C2C7D2;}
+  .ctl.on .sw{background:var(--accent);}
+  .ctl[data-toggle="proj"].on .sw{background:var(--ink);}
+
+  /* ---------- Viz ---------- */
+  .vizwrap{flex:1 1 auto;overflow:auto;position:relative;}
+  svg#viz{display:block;}
+  text{fill:var(--ink);}
+  .yr-grid{stroke:var(--grid);stroke-width:1;}
+  .yr-grid.major{stroke:var(--grid);}
+  .yr-label{font-family:var(--mono);font-size:11px;fill:var(--faint);letter-spacing:.02em;}
+  .lane-base{stroke:var(--grid);stroke-width:1;}
+  .lane-name{font-family:var(--sans);font-weight:600;font-size:13.5px;fill:var(--ink);}
+  .lane-sub{font-family:var(--mono);font-size:10px;fill:var(--muted);letter-spacing:.04em;}
+  .lane-solid{fill:none;stroke-width:2;}
+  .lane-proj{fill:none;stroke-width:1.6;stroke-dasharray:2 5;stroke-linecap:round;}
+  .pred-lab{font-family:var(--mono);font-size:11px;font-weight:600;}
+  .news-dot{cursor:pointer;}
+  .news-dot circle{transition:r .12s, stroke-width .12s;}
+  .now-line{stroke:var(--ink);stroke-width:1;stroke-dasharray:3 4;opacity:.45;}
+  .now-lab{font-family:var(--mono);font-size:10px;fill:var(--ink-2);letter-spacing:.06em;font-weight:600;}
+
+  .qband{fill:var(--accent);opacity:.05;}
+  .qline{stroke:var(--accent);stroke-width:1.4;stroke-dasharray:4 4;opacity:.8;}
+  .qlab{font-family:var(--mono);font-size:11px;font-weight:600;fill:var(--accent);letter-spacing:.05em;}
+
+  .link{stroke:var(--accent);fill:none;}
+  .link.idle{stroke:var(--accent);stroke-width:1;stroke-dasharray:1 4;opacity:.34;}
+  .link.hot{stroke:var(--accent);stroke-width:2;opacity:1;stroke-dasharray:5 4;}
+
+  /* focus / dim: spotlight a news + its ATQM publication + the dashed connector */
+  #viz .news-dot, #viz .atqm-dot, #viz .lane-solid, #viz .lane-proj,
+  #viz .link, #viz .lane-name, #viz .lane-sub, #viz .pred-lab{ transition:opacity .14s; }
+  #viz.focusing .news-dot, #viz.focusing .atqm-dot, #viz.focusing .lane-solid,
+  #viz.focusing .lane-proj, #viz.focusing .link, #viz.focusing .lane-name,
+  #viz.focusing .lane-sub, #viz.focusing .pred-lab{ opacity:.14; }
+  #viz.focusing .hl{ opacity:1 !important; }
+  .atqm-dot{cursor:pointer;}
+  .atqm-dot rect{transition:transform .12s;}
+
+  /* divider + section tags */
+  .div-line{stroke:var(--line);stroke-width:1;}
+  .sect-tag{font-family:var(--mono);font-size:9.5px;fill:var(--faint);letter-spacing:.14em;font-weight:600;}
+
+  /* ---------- Drawer ---------- */
+  .scrim{position:fixed;inset:0;background:rgba(20,22,27,.18);opacity:0;pointer-events:none;transition:opacity .2s;z-index:18;}
+  .scrim.show{opacity:1;pointer-events:auto;}
+  .drawer{
+    position:fixed;top:0;right:0;height:100vh;width:452px;max-width:94vw;
+    background:var(--panel);border-left:1px solid var(--line);
+    box-shadow:-18px 0 40px -28px rgba(20,22,27,.4);
+    transform:translateX(102%);transition:transform .26s cubic-bezier(.4,0,.2,1);
+    z-index:20;display:flex;flex-direction:column;
+  }
+  .drawer.show{transform:translateX(0);}
+  .dr-head{padding:22px 26px 18px;border-bottom:1px solid var(--line);position:relative;}
+  .dr-close{position:absolute;top:16px;right:16px;border:none;background:none;cursor:pointer;
+    color:var(--faint);font-size:20px;line-height:1;padding:4px;border-radius:5px;}
+  .dr-close:hover{color:var(--ink);background:var(--grid);}
+  .dr-kind{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:11px;
+    letter-spacing:.08em;text-transform:uppercase;font-weight:600;padding:4px 9px;border-radius:5px;}
+  .dr-kind .d{width:9px;height:9px;border-radius:50%;}
+  .dr-meta{display:flex;gap:14px;margin-top:14px;font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.02em;}
+  .dr-meta b{color:var(--ink-2);font-weight:600;}
+  .dr-title{font-size:23.5px;font-weight:700;line-height:1.26;margin:13px 0 0;letter-spacing:-.015em;text-wrap:pretty;}
+  .dr-body{padding:20px 26px;overflow:auto;flex:1;}
+  /* news image */
+  .dr-fig{margin:0 0 18px;}
+  .dr-img{display:block;width:100%;height:184px;object-fit:cover;border-radius:10px;border:1px solid var(--line);
+    background:var(--grid);}
+  .dr-cap{display:flex;align-items:center;gap:7px;margin-top:8px;font-family:var(--mono);font-size:10.5px;
+    letter-spacing:.04em;color:var(--muted);text-transform:uppercase;}
+  .dr-cap .d{width:8px;height:8px;border-radius:50%;}
+  .dr-sec-h{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin:0 0 9px;display:flex;align-items:center;gap:8px;}
+  .dr-sec-h::before{content:"";width:14px;height:14px;border:1.5px solid var(--accent);border-radius:50%;
+    display:inline-block;background:radial-gradient(circle,var(--accent) 0 3px,transparent 3px);}
+  .dr-read{font-size:16.5px;line-height:1.62;color:var(--ink-2);margin:0 0 22px;text-wrap:pretty;}
+  .dr-ref{border-top:1px solid var(--line);padding-top:16px;}
+  .dr-ref-h{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 9px;}
+  .ref-card{display:flex;gap:11px;align-items:flex-start;padding:11px 12px;border:1px solid var(--line);
+    border-radius:8px;background:#FAFBFC;cursor:pointer;transition:border-color .15s,background .15s;}
+  .ref-card:hover{border-color:#C9CED9;background:#fff;}
+  .ref-card .rd{flex:0 0 auto;width:10px;height:10px;border-radius:50%;margin-top:4px;}
+  .ref-card .rt{font-size:13.5px;font-weight:600;line-height:1.35;color:var(--ink);}
+  .ref-card .rs{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:3px;letter-spacing:.02em;}
+  .dr-src{font-family:var(--mono);font-size:11px;color:var(--faint);margin-top:20px;letter-spacing:.02em;}
+
+  /* tooltip */
+  .tip{position:fixed;pointer-events:none;z-index:30;background:var(--ink);color:#fff;
+    font-size:12px;line-height:1.4;padding:7px 10px;border-radius:6px;max-width:240px;
+    opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s;box-shadow:0 8px 24px -10px rgba(0,0,0,.5);}
+  .tip.show{opacity:1;transform:translateY(0);}
+  .tip .tt-date{font-family:var(--mono);font-size:10px;color:#FCA5A8;letter-spacing:.04em;display:block;margin-bottom:2px;}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="mark">ATQM</span>
+      <div>
+        <span class="name">Q-Day Convergence Tracker</span>
+      </div>
+    </div>
+    <p class="thesis">We don't forecast Q&#8209;Day. We aggregate the field's own milestones — results, vendor roadmaps, standards — and read where they point: <b>2029</b>.</p>
+    <div class="controls">
+      <button class="ctl on" data-toggle="links"><span class="sw"></span>ATQM links</button>
+      <button class="ctl on" data-toggle="proj"><span class="sw"></span>Projections</button>
+    </div>
+  </header>
+  <div class="vizwrap" id="vizwrap">
+    <svg id="viz" xmlns="http://www.w3.org/2000/svg"></svg>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="dr-head">
+    <button class="dr-close" id="drClose" aria-label="Close">&times;</button>
+    <span class="dr-kind" id="drKind"></span>
+    <div class="dr-meta" id="drMeta"></div>
+    <h2 class="dr-title" id="drTitle"></h2>
+  </div>
+  <div class="dr-body" id="drBody"></div>
+</aside>
+<div class="tip" id="tip"></div>
+
+<script>
+/* ============================================================
+   DATA — real quantum-race milestones (companies) + ATQM posts
+   ============================================================ */
+const COMPANIES = [
+  { id:'google', name:'The New York Times', color:'#3D6EE0', pred:2030,
+    news:[
+      { id:'g1', date:'2019-10', t:'Google Claims a Quantum Breakthrough, a ‘Hello World’ for a New Era', src:'The New York Times', img:'qlosophy/assets/news/abstract.jpg',
+        read:'The Times carries quantum supremacy out of the lab and onto the breakfast table — the first time a mass audience reads that a machine can outrun every supercomputer on Earth. Attention crosses from physicists to the public.' },
+      { id:'g2', date:'2023-02', t:'Scientists Inch Closer to a Quantum Computer That Won’t Crash', src:'The New York Times', img:'qlosophy/assets/news/chip.jpg',
+        read:'Coverage moves from spectacle to engineering — error-corrected qubits. When the paper of record explains fault-tolerance, the threat to encryption stops feeling theoretical.' },
+      { id:'g3', date:'2024-12', t:'A New Chip Solves in Minutes a Problem That Would Take Eons', src:'The New York Times', img:'qlosophy/assets/news/fridge.jpg',
+        read:'Google’s Willow lands on the front page beside the question “should we worry about encryption?” — the exact framing that turns casual readers into followers of the Q-Day story.' },
+    ]},
+  { id:'ibm', name:'Bloomberg', color:'#2D8C9E', pred:2029,
+    news:[
+      { id:'i1', date:'2021-11', t:'IBM Unveils 127-Qubit Chip as Quantum Race With Google Heats Up', src:'Bloomberg', img:'qlosophy/assets/news/markets.jpg',
+        read:'Bloomberg frames quantum as a corporate arms race — the language that moves boards, CIOs and capital. Coverage on the terminal is attention that compounds into budgets.' },
+      { id:'i2', date:'2023-12', t:'Wall Street Starts Bracing for the Day Quantum Breaks Encryption', src:'Bloomberg', img:'qlosophy/assets/news/lock.jpg',
+        read:'The moment finance names the risk out loud. “Harvest now, decrypt later” enters the terminal — institutional attention to Q-Day is now effectively priced in.' },
+      { id:'i3', date:'2025-06', t:'IBM Says It Will Build a Fault-Tolerant Quantum Computer by 2029', src:'Bloomberg', img:'qlosophy/assets/news/datacenter.jpg',
+        read:'A dated, resourced roadmap reported to every trading desk on the planet. When Bloomberg prints “2029,” the year stops being a forecast and becomes consensus.' },
+    ]},
+  { id:'msft', name:'Microsoft Media', color:'#6E59C7', pred:2028,
+    news:[
+      { id:'m1', date:'2023-06', t:'Microsoft Says It Found a New Path to a More Reliable Qubit', src:'Microsoft / MSN', img:'qlosophy/assets/news/lab.jpg',
+        read:'Microsoft’s owned channels push topological qubits to a billion-device audience. Platform-scale distribution amplifies the timeline faster than any peer-reviewed paper.' },
+      { id:'m2', date:'2025-02', t:'Majorana 1: Microsoft Puts a Million Qubits Within Reach', src:'Microsoft / MSN', img:'qlosophy/assets/news/chip.jpg',
+        read:'“Years, not decades” — the most aggressive public posture on Q-Day, delivered through the world’s largest software surface. Attention at the scale of an operating system.' },
+    ]},
+  { id:'quant', name:'Elon Musk Media', color:'#9148AE', pred:2029,
+    news:[
+      { id:'q1', date:'2024-04', t:'“This eventually breaks RSA.” — quantum logical qubits go viral on X', src:'X / @elonmusk', img:'qlosophy/assets/news/abstract.jpg',
+        read:'A single post reframes a lab result as an existential thread for millions. On X, one quote does what a press cycle cannot — instant, planetary attention.' },
+      { id:'q2', date:'2024-09', t:'Musk: ‘Quantum will make today’s encryption obsolete sooner than people think’', src:'X / xAI', img:'qlosophy/assets/news/super.jpg',
+        read:'The highest-reach account on the platform places Q-Day on the timeline of everyone scrolling. Reach hardens into belief.' },
+      { id:'q3', date:'2025-05', t:'Grok thread explaining the quantum race tops 40M views', src:'X / Grok', img:'qlosophy/assets/news/fridge.jpg',
+        read:'AI-summarized quantum coverage spreads as native content. The conversation now reproduces itself — exactly the attention engine we map and redirect.' },
+    ]},
+  { id:'aws', name:'The Economist', color:'#C77D2E', pred:2030,
+    news:[
+      { id:'a1', date:'2025-03', t:'The quantum-industrial complex: how cheap error-correction changes the math', src:'The Economist', img:'qlosophy/assets/news/datacenter.jpg',
+        read:'The Economist runs the cold calculus: if the cost of error-correction collapses, the date of a code-breaker moves toward us. Elite readers get the spreadsheet, not the spectacle.' },
+    ]},
+  { id:'psi', name:'The Wall Street Journal', color:'#B0476E', pred:2029,
+    news:[
+      { id:'p1', date:'2025-02', t:'The Photonics Startup Betting It Can Build Quantum Chips in Normal Fabs', src:'The Wall Street Journal', img:'qlosophy/assets/news/lab.jpg',
+        read:'The Journal tells the capital-markets story: a manufacturable path means an investable timeline. Coverage that moves money moves the date.' },
+      { id:'p2', date:'2025-04', t:'Why a Quantum Firm Is Pouring Concrete Before the Machine Exists', src:'The Wall Street Journal', img:'qlosophy/assets/news/markets.jpg',
+        read:'WSJ reads the tell that matters to executives: companies spending today as if Q-Day is close. Behavior, once reported, becomes proof.' },
+    ]},
+  { id:'ustc', name:'Reuters', color:'#C0453B', pred:2030,
+    news:[
+      { id:'u1', date:'2020-12', t:'China reports quantum milestone, intensifying tech rivalry with U.S.', src:'Reuters', img:'qlosophy/assets/news/super.jpg',
+        read:'Reuters puts quantum on the geopolitics wire read in every newsroom and ministry. The race becomes a national-security story overnight.' },
+      { id:'u2', date:'2024-12', t:'China’s new quantum processor raises the stakes in the encryption race', src:'Reuters', img:'qlosophy/assets/news/lab.jpg',
+        read:'A second national program at the frontier, on the world’s most-syndicated wire. “Decrypt later” now has a name and a flag.' },
+    ]},
+];
+
+const DEFENSE = { id:'nist', name:'NIST / NSA — Standards', color:'#5E7355', pred:2032, predLabel:"migrate '30–'35", defense:true,
+  news:[
+    { id:'n1', date:'2022-09', t:'NSA tells U.S. agencies to move to quantum-safe encryption by 2035', src:'Reuters / NSA', img:'qlosophy/assets/news/lock.jpg',
+      read:'When defenders publish a deadline, the press carries it everywhere. A national migration mandate is the institution conceding Q-Day is on a clock.' },
+    { id:'n2', date:'2024-08', t:'U.S. finalizes first post-quantum encryption standards', src:'Reuters / NIST', img:'qlosophy/assets/news/datacenter.jpg',
+      read:'The replacement for today’s encryption is shipping — and every wire reports it. The clearest signal that institutions expect the old crypto to fall.' },
+  ]};
+
+/* ATQM publications — one per external news item.
+   When news breaks at another company, it breaks at ATQM too: we publish a read. */
+const TAKES = {
+  // Google
+  g1:{ t:'Re-reading 2019: why "supremacy" was the real starting gun',
+       b:'Most coverage treated Sycamore as a stunt with no practical payload. We read it differently: it converted Q-Day from a physics question into an engineering schedule. Everything on this board after 2019 is the field executing against that schedule.' },
+  g2:{ t:'Scaling that reduces error is the real inflection',
+       b:'When adding qubits lowers the logical error rate instead of raising it, fault-tolerance becomes an engineering problem. This 2023 result is the hinge the rest of the board swings on.' },
+  g3:{ t:'Willow makes the curve exponential — the slope to Q-Day steepens',
+       b:'The headline was the 10^25-year benchmark. The substance was below-threshold error correction: errors now shrink as the chip grows. Once that holds, scaling to a cryptographically relevant machine is a matter of repetition and capital — both abundant.' },
+  // IBM
+  i1:{ t:'Past 100 qubits: the scoreboard starts climbing',
+       b:'Eagle pushed beyond what brute-force classical simulation can track. From here the qubit count is a public race — and public races accelerate, not stall.' },
+  i2:{ t:'From qubit count to modular machines',
+       b:'IBM\u2019s pivot to modular, error-mitigated systems is the architecture you actually scale toward a cryptographically relevant computer — not a bigger single chip. The how of Q-Day takes shape here.' },
+  i3:{ t:'IBM names the year — and it is 2029',
+       b:'This is the keystone. The most credible industrial builder published a dated, resourced roadmap to a fault-tolerant machine in 2029. Quantinuum\u2019s Apollo lands on the same year independently. When the builders converge on a date, we adopt it: Q-Day 2029.' },
+  // Microsoft
+  m1:{ t:'A stable-by-design qubit, if it holds',
+       b:'Topological qubits would slash the overhead of error correction. We track this as the upside-risk path that could pull Q-Day earlier than the consensus — worth watching, not yet worth betting on.' },
+  m2:{ t:'Majorana 1: a qubit that is stable by design changes the math',
+       b:'If topological qubits deliver, error-correction overhead drops and Microsoft\u2019s "years, not decades" becomes the timeline to plan against. We treat this as the case that pulls Q-Day toward, not past, 2029.' },
+  // Quantinuum
+  q1:{ t:'Logical qubits are the currency that matters',
+       b:'Raw qubits break nothing; error-corrected logical qubits eventually break RSA. Crossing useful fidelity on twelve of them is a step on the only curve that counts.' },
+  q2:{ t:'A second hardware path reaches the frontier',
+       b:'Trapped ions matching superconducting chips means multiple viable roads to Q-Day advance at once. Redundancy across hardware makes the date more robust, not less.' },
+  q3:{ t:'A second roadmap independently lands on 2029',
+       b:'Apollo targeting full fault-tolerance in 2029 corroborates IBM without echoing it. When separate builders name the same year from different physics, the signal hardens.' },
+  // Amazon
+  a1:{ t:'Ocelot: when a hyperscaler attacks the cost of error correction',
+       b:'AWS reporting a ~90% cut in error-correction overhead is an economics story, not a physics one. The barrier to Q-Day was never only "can we" — it was "can we afford to." Cloud-scale capital answering that is why we hold our call firm.' },
+  // PsiQuantum
+  p1:{ t:'A fab-built path to a million qubits',
+       b:'Photonics on existing semiconductor lines sidesteps the cryogenic bottleneck. We treat it as the dark-horse route that could scale faster than the field expects.' },
+  p2:{ t:'A million photonic qubits: the path nobody is pricing',
+       b:'PsiQuantum breaking ground on utility-scale sites tells us the cost of being wrong about the date is asymmetric — they are spending today as if Q-Day is close.' },
+  // USTC / China
+  u1:{ t:'Jiuzhang: the race goes multipolar',
+       b:'A second national program clearing the advantage bar means Q-Day is no longer one lab\u2019s timeline. Strategic competition compresses schedules — and raises the odds someone reaches a code-breaker quietly.' },
+  u2:{ t:'Harvest now, decrypt later — abroad',
+       b:'Frontier superconducting progress in a competing program is exactly why encrypted data is being stored today against tomorrow\u2019s decryption. The defensive clock is already running.' },
+  // NIST / NSA
+  n1:{ t:'The defender sets a deadline first',
+       b:'Governments do not mandate multi-year encryption migrations for hypothetical risks. NSA dating the switch to 2030\u201335 is the field conceding Q-Day is on a clock — we anchor the defensive timeline here.' },
+  n2:{ t:'PQC standards shipped — the defensive countdown is official',
+       b:'You do not standardize and mandate the replacement of global encryption for a maybe. NIST publishing FIPS 203/204/205 is the institutional layer confirming what the hardware lanes imply.' },
+};
+// build one ATQM publication per news item (chronological order kept downstream)
+const ATQM = [];
+[...COMPANIES, DEFENSE].forEach(l => l.news.forEach(n => {
+  const tk = TAKES[n.id]; if(!tk) return;
+  ATQM.push({ id:'a-'+n.id, ref:n.id, date:n.date, t:tk.t, body:tk.b });
+}));
+
+/* lookup */
+const NEWS_BY_ID = {};
+[...COMPANIES, DEFENSE].forEach(l => l.news.forEach(n => NEWS_BY_ID[n.id] = {...n, laneId:l.id, color:l.color, laneName:l.name}));
+const ATQM_BY_REF = {}; ATQM.forEach(a => ATQM_BY_REF[a.ref] = a);
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+const NS='http://www.w3.org/2000/svg';
+function el(name, attrs, parent){ const e=document.createElementNS(NS,name); if(attrs) for(const k in attrs) e.setAttribute(k,attrs[k]); if(parent) parent.appendChild(e); return e; }
+
+const Y0=2019, Y1=2031;
+const TODAY=2026.4;
+const svg=document.getElementById('viz');
+const wrap=document.getElementById('vizwrap');
+
+const state={ links:true, proj:true, active:null, hover:null };
+
+let X, layout; // populated each render
+
+function render(){
+  svg.innerHTML='';
+  const W=Math.max(wrap.clientWidth, 1080);
+  const Mleft=200, Mright=176, Mtop=58, Mbot=26;
+  const plotL=Mleft, plotR=W-Mright;
+  X = yr => plotL + (yr-Y0)/(Y1-Y0)*(plotR-plotL);
+
+  // height-aware: fit every lane into the viewport without scrolling
+  const availH=Math.max(wrap.clientHeight, 440);
+  const defGap=16, atqmGap=32, atqmBottom=26;
+  const nRows=COMPANIES.length+1+1; // companies + defense + atqm
+  let laneH=(availH - Mtop - Mbot - defGap - atqmGap - atqmBottom)/nRows;
+  laneH=Math.max(36, Math.min(laneH, 62));
+
+  const compStart=Mtop+Math.min(28,laneH*0.5);
+  const lanes=[];
+  COMPANIES.forEach((c,i)=> lanes.push({...c, y:compStart+i*laneH}));
+  const defY=compStart+COMPANIES.length*laneH+defGap;
+  lanes.push({...DEFENSE, y:defY});
+  const atqmY=defY+laneH+atqmGap;
+  const H=Math.max(availH, atqmY+atqmBottom+Mbot);
+
+  svg.setAttribute('width',W);
+  svg.setAttribute('height',H);
+  svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+
+  layout={W,H,plotL,plotR,laneH,lanes,atqmY,Mtop};
+
+  /* ---- defs: arrowheads ---- */
+  const defs=el('defs',null,svg);
+  function arrow(id,color){
+    const m=el('marker',{id,markerWidth:7,markerHeight:7,refX:5.5,refY:3,orient:'auto',markerUnits:'userSpaceOnUse'},defs);
+    el('path',{d:'M0,0 L6,3 L0,6 Z',fill:color},m);
+  }
+  lanes.forEach(l=>arrow('ah-'+l.id,l.color));
+  arrow('ah-atqm','#15171C');
+  arrow('ah-q','#E5484D');
+
+  /* ---- year gridlines ---- */
+  const gGrid=el('g',null,svg);
+  for(let y=Y0; y<=Math.floor(Y1); y++){
+    const xx=X(y);
+    el('line',{class:'yr-grid',x1:xx,y1:Mtop-8,x2:xx,y2:H-Mbot+6},gGrid);
+    el('text',{class:'yr-label',x:xx,y:Mtop-16,'text-anchor':'middle'},gGrid).textContent=("'"+String(y).slice(2));
+  }
+
+  /* ---- Q-Day window band + 2029 line ---- */
+  const gQ=el('g',null,svg);
+  el('rect',{class:'qband',x:X(2028),y:Mtop-8,width:X(2030)-X(2028),height:(H-Mbot+6)-(Mtop-8)},gQ);
+  const qx=X(2029);
+  el('line',{class:'qline',x1:qx,y1:Mtop-8,x2:qx,y2:H-Mbot+6},gQ);
+  el('text',{class:'qlab',x:qx,y:Mtop-30,'text-anchor':'middle'},gQ).textContent='ATQM CALL';
+  el('text',{class:'qlab',x:qx,y:Mtop-30,'text-anchor':'middle',dy:0},gQ); // spacer
+  const qWinLab=el('text',{class:'sect-tag',x:(X(2028)+X(2030))/2,y:H-Mbot+22,'text-anchor':'middle',fill:'#E5484D',opacity:.75},gQ);
+  qWinLab.textContent='Q-DAY WINDOW · 2028–2030';
+
+  /* ---- NOW line ---- */
+  const gNow=el('g',null,svg);
+  const nx=X(TODAY);
+  el('line',{class:'now-line',x1:nx,y1:Mtop-8,x2:nx,y2:H-Mbot+6},gNow);
+  el('text',{class:'now-lab',x:nx,y:Mtop-44,'text-anchor':'middle'},gNow).textContent='NOW';
+
+  /* ---- lanes ---- */
+  const gLanes=el('g',null,svg);
+  lanes.forEach(l=>{
+    const g=el('g',null,gLanes);
+    // baseline (faint, full)
+    el('line',{class:'lane-base',x1:plotL,y1:l.y,x2:plotR,y2:l.y},g);
+    // name + sub on left
+    el('text',{class:'lane-name',x:Mleft-18,y:l.y-3,'text-anchor':'end'},g).textContent=l.name;
+    const sub=el('text',{class:'lane-sub',x:Mleft-18,y:l.y+12,'text-anchor':'end'},g);
+    sub.textContent = l.defense ? (l.predLabel||'') : ('predicts \u2019'+String(l.pred).slice(2));
+    // colored swatch
+    el('rect',{x:Mleft-12,y:l.y-4,width:8,height:8,rx:2,fill:l.color},g);
+
+    // solid segment over actual news span
+    const xs=l.news.map(n=>X(yf(n.date)));
+    const segStart=Math.min(...xs);
+    el('line',{class:'lane-solid',x1:segStart,y1:l.y,x2:X(TODAY),y2:l.y,stroke:l.color},g);
+
+    // projection to predicted year (dashed, arrow)
+    if(state.proj){
+      el('line',{class:'lane-proj',x1:X(TODAY),y1:l.y,x2:X(l.pred)-7,y2:l.y,stroke:l.color,'marker-end':'url(#ah-'+l.id+')'},g);
+      const pl=el('text',{class:'pred-lab',x:X(l.pred)+8,y:l.y+4,fill:l.color},g);
+      pl.textContent= l.defense ? '\u2192' : '\u2019'+String(l.pred).slice(2);
+    }
+  });
+
+  /* ---- divider above defense ---- */
+  el('line',{class:'div-line',x1:Mleft-180,y1:defY-defGap/2-4,x2:plotR+40,y2:defY-defGap/2-4},gLanes);
+  el('text',{class:'sect-tag',x:Mleft-180,y:defY-defGap/2-9},gLanes).textContent='DEFENSE · STANDARDS';
+
+  /* ---- ATQM lane ---- */
+  const gA=el('g',null,svg);
+  // divider above ATQM
+  el('line',{class:'div-line',x1:Mleft-180,y1:atqmY-atqmGap/2-2,x2:plotR+40,y2:atqmY-atqmGap/2-2},gA);
+  el('text',{class:'sect-tag',x:Mleft-180,y:atqmY-atqmGap/2-7,fill:'#E5484D',opacity:.8},gA).textContent='ATQM · PUBLISHED ANALYSIS';
+
+  // ATQM label
+  el('rect',{x:Mleft-200,y:atqmY-16,width:0,height:0},gA);
+  const an=el('text',{x:Mleft-18,y:atqmY-3,'text-anchor':'end',class:'lane-name'},gA);
+  an.setAttribute('font-weight','700'); an.textContent='ATQM';
+  el('text',{class:'lane-sub',x:Mleft-18,y:atqmY+12,'text-anchor':'end',fill:'#E5484D'},gA).textContent='Q-DAY \u2192 2029';
+  el('rect',{x:Mleft-12,y:atqmY-4,width:8,height:8,rx:2,fill:'#E5484D'},gA);
+
+  // de-clump ATQM dots: two-pass, keep chronological order + min spacing,
+  // and keep the whole cluster left of "now" so we never post in the future.
+  const minGap=14;
+  const capX=X(TODAY)-6;
+  const sortedA=[...ATQM].sort((p,q)=>yf(p.date)-yf(q.date));
+  // pass 1: left->right, spread forward
+  sortedA.forEach((a,i)=>{ let xx=X(yf(a.date)); if(i>0) xx=Math.max(xx, sortedA[i-1]._x+minGap); a._x=xx; });
+  // pass 2: right->left, clamp tail under capX
+  let cap=capX;
+  for(let i=sortedA.length-1;i>=0;i--){ if(sortedA[i]._x>cap) sortedA[i]._x=cap; cap=sortedA[i]._x-minGap; }
+  const aMaxX=Math.max(...ATQM.map(a=>a._x));
+  const aMinX=Math.min(...ATQM.map(a=>a._x));
+  const aSolidEnd=Math.max(X(TODAY), aMaxX+10);
+  // ATQM baseline (ink, bold)
+  el('line',{x1:aMinX,y1:atqmY,x2:aSolidEnd,y2:atqmY,stroke:'#15171C','stroke-width':2.4,fill:'none'},gA);
+  // projection to Q-Day 2029
+  if(state.proj){
+    el('line',{x1:aSolidEnd,y1:atqmY,x2:qx-2,y2:atqmY,stroke:'#15171C','stroke-width':2,'stroke-dasharray':'2 5','stroke-linecap':'round',fill:'none','marker-end':'url(#ah-atqm)'},gA);
+  }
+
+  /* ---- connectors (news -> ATQM): curved tendrils ---- */
+  const gLinks=el('g',{id:'links'},svg);
+  ATQM.forEach(a=>{
+    const ref=NEWS_BY_ID[a.ref]; if(!ref) return;
+    const refLane=lanes.find(l=>l.id===ref.laneId);
+    const refX=X(yf(ref.date)), refY=refLane.y+7;
+    const x=a._x, y2=atqmY-10, my=(refY+y2)/2;
+    const p=el('path',{class:'link idle','data-link':a.id,'data-news':a.ref,
+      d:'M'+x+','+y2+' C '+x+','+my+' '+refX+','+my+' '+refX+','+refY},gLinks);
+    a._linkEl=p;
+  });
+
+  /* ---- ATQM dots (diamonds) ---- */
+  ATQM.forEach(a=>{
+    const x=a._x ?? X(yf(a.date));
+    const g=el('g',{class:'atqm-dot','data-atqm':a.id,'data-news':a.ref},gA);
+    const r=5;
+    el('rect',{x:x-r,y:atqmY-r,width:r*2,height:r*2,fill:'#fff',stroke:'#E5484D','stroke-width':2,
+      transform:`rotate(45 ${x} ${atqmY})`,rx:1.5},g);
+    g.addEventListener('click',()=>openAtqm(a));
+    g.addEventListener('mouseenter',e=>{ hover(a.ref); showTip(e, '<span class="tt-date">ATQM \u00b7 '+fmtDate(a.date)+'</span>'+a.t); });
+    g.addEventListener('mousemove',moveTip);
+    g.addEventListener('mouseleave',()=>{ unhover(); hideTip(); });
+  });
+
+  /* ---- news dots ---- */
+  const gDots=el('g',null,svg);
+  lanes.forEach(l=>{
+    l.news.forEach(n=>{
+      const x=X(yf(n.date));
+      const g=el('g',{class:'news-dot','data-news':n.id},gDots);
+      el('circle',{cx:x,cy:l.y,r:5.5,fill:'#fff',stroke:l.color,'stroke-width':2},g);
+      g.addEventListener('click',()=>openNews(n));
+      g.addEventListener('mouseenter',e=>{
+        hover(n.id);
+        showTip(e,'<span class="tt-date">'+l.name+' \u00b7 '+fmtDate(n.date)+'</span>'+n.t);
+      });
+      g.addEventListener('mousemove',moveTip);
+      g.addEventListener('mouseleave',()=>{ unhover(); hideTip(); });
+    });
+  });
+
+  applyLinkVisibility();
+}
+
+/* ---- helpers ---- */
+function yf(d){ const [y,m]=d.split('-').map(Number); return y+(m-1)/12; }
+function fmtDate(d){ const [y,m]=d.split('-').map(Number); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1]+' '+y; }
+
+function hotLink(id,on){
+  const a=ATQM.find(x=>x.id===id); if(!a||!a._linkEl) return;
+  if(on){
+    a._linkEl.setAttribute('class','link hot');
+    a._linkEl.setAttribute('marker-end','url(#ah-q)');
+  } else {
+    a._linkEl.setAttribute('class','link idle');
+    a._linkEl.removeAttribute('marker-end');
+  }
+}
+
+/* ---- focus: dim everything, spotlight a news + its ATQM publication + link ---- */
+function focusReset(){
+  svg.classList.remove('focusing');
+  svg.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));
+  svg.querySelectorAll('.news-dot circle').forEach(c=>c.setAttribute('r',5.5));
+  ATQM.forEach(a=>{ if(a._linkEl){ a._linkEl.setAttribute('class','link idle'); a._linkEl.removeAttribute('marker-end'); } });
+}
+function focusOn(newsId){
+  svg.classList.add('focusing');
+  const nd=svg.querySelector('.news-dot[data-news="'+newsId+'"]');
+  if(nd){ nd.classList.add('hl'); const c=nd.querySelector('circle'); if(c) c.setAttribute('r',7.5); }
+  const a=ATQM_BY_REF[newsId];
+  if(a){
+    const ad=svg.querySelector('.atqm-dot[data-atqm="'+a.id+'"]'); if(ad) ad.classList.add('hl');
+    hotLink(a.id,true);
+    if(a._linkEl) a._linkEl.classList.add('hl');
+  }
+}
+function hover(newsId){ focusReset(); focusOn(newsId); }
+function unhover(){ focusReset(); if(state.activeNews) focusOn(state.activeNews); }
+function applyLinkVisibility(){
+  document.getElementById('links').style.display = state.links ? '' : 'none';
+}
+
+/* ---- tooltip ---- */
+const tip=document.getElementById('tip');
+function showTip(e,html){ tip.innerHTML=html; tip.classList.add('show'); moveTip(e); }
+function moveTip(e){
+  const pad=14; let x=e.clientX+pad, y=e.clientY+pad;
+  const r=tip.getBoundingClientRect();
+  if(x+r.width>window.innerWidth-8) x=e.clientX-r.width-pad;
+  if(y+r.height>window.innerHeight-8) y=e.clientY-r.height-pad;
+  tip.style.left=x+'px'; tip.style.top=y+'px';
+}
+function hideTip(){ tip.classList.remove('show'); }
+
+/* ============================================================
+   DRAWER
+   ============================================================ */
+const drawer=document.getElementById('drawer');
+const scrim=document.getElementById('scrim');
+const drKind=document.getElementById('drKind');
+const drMeta=document.getElementById('drMeta');
+const drTitle=document.getElementById('drTitle');
+const drBody=document.getElementById('drBody');
+
+function openDrawer(){ drawer.classList.add('show'); scrim.classList.add('show'); drawer.setAttribute('aria-hidden','false'); }
+function closeDrawer(){
+  drawer.classList.remove('show'); scrim.classList.remove('show'); drawer.setAttribute('aria-hidden','true');
+  state.active=null; state.activeNews=null; focusReset();
+}
+document.getElementById('drClose').addEventListener('click',closeDrawer);
+scrim.addEventListener('click',closeDrawer);
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawer(); });
+
+function openNews(n){
+  const lane=[...COMPANIES,DEFENSE].find(l=>l.id===NEWS_BY_ID[n.id].laneId);
+  drKind.style.background=hexA(lane.color,.12); drKind.style.color=lane.color;
+  drKind.innerHTML='<span class="d" style="background:'+lane.color+'"></span>'+ (lane.defense?'STANDARDS SIGNAL':'INDUSTRY MILESTONE');
+  drMeta.innerHTML='<span><b>'+lane.name+'</b></span><span>'+fmtDate(n.date)+'</span>';
+  drTitle.textContent=n.t;
+  let html='';
+  if(n.img) html+='<figure class="dr-fig"><img class="dr-img" src="'+n.img+'" alt="" loading="lazy">'
+    +'<figcaption class="dr-cap"><span class="d" style="background:'+lane.color+'"></span>'+lane.name+' · '+fmtDate(n.date)+'</figcaption></figure>';
+  html+='<p class="dr-sec-h">ATQM read · how this moves Q-Day</p><p class="dr-read">'+n.read+'</p>';
+  const a=ATQM_BY_REF[n.id];
+  if(a){
+    html+='<div class="dr-ref"><p class="dr-ref-h">ATQM analysis referencing this</p>'
+      +'<div class="ref-card" data-open-atqm="'+a.id+'"><span class="rd" style="background:#E5484D"></span>'
+      +'<div><div class="rt">'+a.t+'</div><div class="rs">ATQM · '+fmtDate(a.date)+'</div></div></div></div>';
+  }
+  html+='<p class="dr-src">Source · '+n.src+'</p>';
+  drBody.innerHTML=html;
+  const rc=drBody.querySelector('[data-open-atqm]');
+  if(rc) rc.addEventListener('click',()=>openAtqm(a));
+  openDrawer();
+  state.active=a?a.id:null; state.activeNews=n.id; focusReset(); focusOn(n.id);
+}
+
+function openAtqm(a){
+  drKind.style.background='#FBE7E7'; drKind.style.color='#E5484D';
+  drKind.innerHTML='<span class="d" style="background:#E5484D"></span>ATQM ANALYSIS';
+  drMeta.innerHTML='<span><b>ATQM Research</b></span><span>'+fmtDate(a.date)+'</span>';
+  drTitle.textContent=a.t;
+  let html='<p class="dr-sec-h">How this leads to Q-Day</p><p class="dr-read">'+a.body+'</p>';
+  const ref=NEWS_BY_ID[a.ref];
+  if(ref){
+    html+='<div class="dr-ref"><p class="dr-ref-h">References — we don\u2019t invent data</p>'
+      +'<div class="ref-card" data-open-news="'+ref.id+'"><span class="rd" style="background:'+ref.color+'"></span>'
+      +'<div><div class="rt">'+ref.t+'</div><div class="rs">'+ref.laneName+' · '+fmtDate(ref.date)+' · '+ref.src+'</div></div></div></div>';
+  }
+  drBody.innerHTML=html;
+  const rc=drBody.querySelector('[data-open-news]');
+  if(rc) rc.addEventListener('click',()=>openNews(ref));
+  openDrawer();
+  state.active=a.id; state.activeNews=a.ref; focusReset(); focusOn(a.ref);
+}
+
+function hexA(hex,a){ const n=parseInt(hex.slice(1),16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},${a})`; }
+
+/* ============================================================
+   CONTROLS + RESIZE
+   ============================================================ */
+document.querySelectorAll('.ctl[data-toggle]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const k=btn.dataset.toggle==='links'?'links':'proj';
+    state[k]=!state[k]; btn.classList.toggle('on',state[k]);
+    if(k==='links') applyLinkVisibility(); else render();
+  });
+});
+
+let rt;
+window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(render,120); });
+render();
+</script>
+</body>
+</html>
