@@ -1,6 +1,5 @@
 /**
- * ATQM page content — sourced verbatim from atqm_docs/ (Areth.md,
- * ATQM_Areth_master_corrected.md, ATQM_Areth_domain_expansion.md).
+ * ATQM page content — sourced from atqm_docs/.
  * Figures and qualifiers are kept faithful: the master doc insists the honest
  * framing (smoke test != production, FN-DSA = draft FIPS 206, CLOB = roadmap,
  * PQ signature-size trade-off) is a strength of the pitch, not a weakness.
@@ -12,7 +11,7 @@ export const HERO = {
   title: "Atom Quantum",
   lede: "A post-quantum L1 for the world after secp256k1.",
   tagline: "EVM where it counts. New cryptography everywhere else.",
-  domain: "areth.network",
+  domain: "atqm.network",
 };
 
 export const PROBLEM = {
@@ -48,24 +47,177 @@ export const PROBLEM = {
   ],
 };
 
-export const ATQM_VS_ARETH = {
-  rows: [
-    { key: "What it is", atqm: "Umbrella project, ecosystem, brand", areth: "Layer 1 blockchain, the technology core" },
-    { key: "Role", atqm: "Protective perimeter over ecosystem projects", areth: "The material the protection is built from" },
-    { key: "Audience", atqm: "Investors, community, marketing", areth: "Developers, validators, dApp builders" },
-    { key: "Token", atqm: "$ATQM", areth: "Native gas token of the Areth network" },
-  ],
-  acronym: [
-    { letter: "A", word: "Atom", note: "Root brand of the ATOM Group ecosystem." },
-    { letter: "T", word: "Technology", note: "NIST-standardized post-quantum primitives (FIPS 203/204; FN-DSA draft FIPS 206)." },
-    { letter: "Q", word: "Quantum", note: "Architecture built to stay secure in the post-quantum era." },
-    { letter: "M", word: "Mainnet", note: "Production-grade network designed for long-term resilience." },
+export const ATQM_ACRONYM = [
+  { letter: "A", word: "Atom", note: "Root brand of the ATOM Group ecosystem." },
+  { letter: "T", word: "Technology", note: "NIST-standardized post-quantum primitives (FIPS 203/204; FN-DSA draft FIPS 206)." },
+  { letter: "Q", word: "Quantum", note: "Architecture built to stay secure in the post-quantum era." },
+  { letter: "M", word: "Mainnet", note: "Production-grade network designed for long-term resilience." },
+];
+
+/**
+ * Ecosystem + Products — the consumer-facing surfaces that sit on top of the
+ * ATQM post-quantum core. Copy here is PLACEHOLDER ("neurslop") to be rewritten
+ * by marketing; product set mirrors the Figma `Qvanta` node 16820-45026
+ * (DEX, Staking, Bridge, mobile App, web App, + one ecosystem surface).
+ */
+export const ECOSYSTEM = {
+  intro:
+    "ATQM is the post-quantum core. Everything a user touches — trading, staking, bridging, wallets — settles on the same ML-DSA / ML-KEM spine, so security never depends on the surface in front of it.",
+  core: {
+    label: "ATQM",
+    sub: "Post-quantum L1",
+  },
+};
+
+/**
+ * The product surfaces of the ATOM ecosystem. Mirrors the Figma `Qvanta` product
+ * frames (node 16820-45026): DEX, Staking, Bridge and the mobile Wallet. `key`
+ * maps to both an icon (EcosystemOrbit) and a mock-interface component
+ * (ProductShowcase). Order here is the order nodes are placed around the circle.
+ */
+export type Product = {
+  key: "dex" | "staking" | "bridge" | "hardware" | "wallet";
+  name: string;
+  /** Short label for the ecosystem orbit node (defaults to name). */
+  short?: string;
+  tagline: string;
+  body: string;
+  features: string[];
+};
+
+export const PRODUCTS: { intro: string; items: Product[] } = {
+  intro:
+    "Five surfaces, one post-quantum spine. No product re-implements its own cryptography — DEX, Staking, Bridge, the Hardware Wallet and its companion app all ship against the same audited ATQM core.",
+  items: [
+    {
+      key: "dex",
+      name: "DEX",
+      tagline: "Swap & trade",
+      body: "Trade any ecosystem asset with settlement you can trust. Every order is authorized with an ML-DSA signature and clears against the same block-bound finality as the chain itself.",
+      features: [
+        "One-click swaps with live, PQ-signed quotes",
+        "Slippage, rate and gas shown before you sign",
+        "Clean EIP-1559 fees — no blob theatre",
+      ],
+    },
+    {
+      key: "staking",
+      name: "Staking",
+      tagline: "Stake & earn",
+      body: "Stake QANT to help secure HotStuff finality and earn protocol rewards. Validator and delegator signatures are pure ML-DSA — no BLS aggregation, no pairing-based assumptions to break.",
+      features: [
+        "Live APR, max-slashing and balance at a glance",
+        "Transparent cooldown before you unstake",
+        "Rewards accrue against finalized blocks",
+      ],
+    },
+    {
+      key: "bridge",
+      name: "Bridge",
+      tagline: "Cross-chain",
+      body: "Move assets between ATQM and the chains you already use. Cross-chain messages are anchored to finalized blocks and verified end to end with post-quantum signatures.",
+      features: [
+        "Pick source and destination chain in one view",
+        "Quoted amount, fees and address upfront",
+        "Crosschain routing backed by PQ proofs",
+      ],
+    },
+    {
+      key: "hardware",
+      name: "Hardware Wallet",
+      short: "Hardware",
+      tagline: "Cold storage · post-quantum",
+      body: "Engineered with the latest advancements in quantum computing to protect you and your crypto against any current or future threat. Keys are generated and ML-DSA signing happens on-device — they never leave the secure element in cleartext.",
+      features: [
+        "Air-gapped post-quantum secure element",
+        "On-device ML-DSA signing — keys never exported",
+        "Pairs with the companion app over an encrypted channel",
+      ],
+    },
+    {
+      key: "wallet",
+      name: "Companion App",
+      short: "Companion",
+      tagline: "Mobile · iOS & Android",
+      body: "Take full control of your assets with the companion app. Stay on top of market fluctuations, track the value of your funds, and trade with a tap — every action confirmed on the paired Hardware Wallet.",
+      features: [
+        "Live portfolio, NFTs and qubit assets in one view",
+        "Trade and send, signed on the paired device",
+        "Threshold-of-N accounts across devices",
+      ],
+    },
   ],
 };
 
+/**
+ * Hardware Wallet hero composition — recreates the Figma "POST" frame: ghosted
+ * "TECHNOLOGY" backdrop, the device render, two tick-marked copy blocks, the big
+ * ATOM wordmark and the tagline. Copy is verbatim from the frame.
+ */
+export const HARDWARE = {
+  ghost: "TECHNOLOGY",
+  eyebrow: "Hardware Wallet",
+  left: "Engineered with the latest advancements in quantum computing. Protecting you and your crypto against any current or future threat.",
+  right:
+    "Take full control of your assets with the companion app. Stay on top of market fluctuations, track the value of your funds and trade assets with a tap.",
+  tagline: "Impenetrable defense against any threat",
+};
+
+/**
+ * Plain-language comparison vs the chains people already know. The cryptographic
+ * facts are accurate (ECDSA / BLS / Ed25519 are all broken by Shor's algorithm;
+ * ML-DSA / ML-KEM are NIST post-quantum standards). The ATQM column (index 0)
+ * is rendered as the highlighted one.
+ */
+export const COMPARISON = {
+  intro:
+    "Bitcoin, Ethereum and Solana all lock funds with elliptic-curve cryptography — the exact thing a quantum computer breaks. ATQM is built on NIST post-quantum primitives from the genesis block.",
+  chains: ["ATQM", "Ethereum", "Bitcoin", "Solana"],
+  rows: [
+    {
+      label: "Signatures",
+      values: ["ML-DSA / FN-DSA", "ECDSA + BLS", "ECDSA", "Ed25519"],
+    },
+    {
+      label: "Finality",
+      values: [
+        "Deterministic, block-bound",
+        "Probabilistic + checkpoints",
+        "Probabilistic (PoW)",
+        "Probabilistic",
+      ],
+    },
+    {
+      label: "Breaks under a quantum computer",
+      values: ["No", "Yes", "Yes", "Yes"],
+    },
+    {
+      label: "Post-quantum from genesis",
+      values: ["Yes", "No", "No", "No"],
+    },
+  ],
+  note: "ECDSA, BLS and Ed25519 are all broken by Shor's algorithm on a large enough quantum computer. Other chains have post-quantum migration on their roadmaps — ATQM is post-quantum by design, not a retrofit.",
+};
+
+/** Understandable analogies for a non-technical audience. */
+export const ANALOGIES = [
+  {
+    title: "Harvest now, decrypt later",
+    body: "A thief can't open your safe today — so he photographs it and waits for a master key. Everything public on a chain today is that photo: stored forever, readable the day a quantum computer arrives.",
+  },
+  {
+    title: "The lock everyone shares",
+    body: "Bitcoin, Ethereum and most chains lock funds with elliptic-curve math — a padlock a quantum computer picks in seconds. ATQM swaps it for a lattice-based lock that has no known pick.",
+  },
+  {
+    title: "You can't re-pour a foundation",
+    body: "Bolting post-quantum crypto onto a live chain is like replacing a skyscraper's foundation with everyone still inside. ATQM poured its post-quantum foundation at the genesis block.",
+  },
+];
+
 export const SUBSTRATE = {
   intro:
-    "Areth is a fork-descendant of Reth — not Reth with PQ patches. We kept Reth's mature execution, storage, and trie. We replaced every place where Ethereum's cryptographic assumptions live.",
+    "ATQM is a fork-descendant of Reth — not Reth with PQ patches. We kept Reth's mature execution, storage, and trie. We replaced every place where Ethereum's cryptographic assumptions live.",
   kept: [
     "MDBX storage provider",
     "Merkle-Patricia trie",
@@ -79,9 +231,9 @@ export const SUBSTRATE = {
     ["Gasper consensus", "HotStuff (deterministic finality)"],
     ["devp2p transport", "PQ secure session"],
     ["ECDSA tx auth", "ML-DSA / FN-DSA"],
-    ["ENR node identity", "ArethNodeId"],
+    ["ENR node identity", "ATQMNodeId"],
     ["X25519 key exchange", "ML-KEM-768"],
-    ["eth_* RPC namespace", "areth_*"],
+    ["eth_* RPC namespace", "atqm_*"],
     ["Probabilistic finality", "Block-bound finality"],
   ] as [string, string][],
 };
@@ -103,15 +255,15 @@ export const ARCHITECTURE = {
 };
 
 export const CRATES: { key: string; value: string }[] = [
-  { key: "areth-crypto", value: "ML-DSA, FN-DSA, ML-KEM-512/768/1024, encrypted keystores" },
-  { key: "areth-primitives", value: "ArethTransaction with PQ auth, EIP-1559, EIP-2718 envelopes" },
-  { key: "areth-consensus", value: "HotStuff rounds, leader schedule, safety, slashing evidence" },
-  { key: "areth-network", value: "ML-KEM session codec, AEAD framing, role-aware peer manager" },
-  { key: "areth-storage", value: "Reth-provider extensions for HotStuff metadata and finality" },
-  { key: "areth-node", value: "Validator / full-client launch, pacemaker, proposal builder" },
-  { key: "areth-revm", value: "Areth-owned EVM execution surface" },
-  { key: "areth-payload", value: "Payload builder with PQ-auth verification" },
-  { key: "areth-txpool", value: "Transaction pool tuned for PQ signature sizes" },
+  { key: "atqm-crypto", value: "ML-DSA, FN-DSA, ML-KEM-512/768/1024, encrypted keystores" },
+  { key: "atqm-primitives", value: "ATQMTransaction with PQ auth, EIP-1559, EIP-2718 envelopes" },
+  { key: "atqm-consensus", value: "HotStuff rounds, leader schedule, safety, slashing evidence" },
+  { key: "atqm-network", value: "ML-KEM session codec, AEAD framing, role-aware peer manager" },
+  { key: "atqm-storage", value: "Reth-provider extensions for HotStuff metadata and finality" },
+  { key: "atqm-node", value: "Validator / full-client launch, pacemaker, proposal builder" },
+  { key: "atqm-revm", value: "ATQM-owned EVM execution surface" },
+  { key: "atqm-payload", value: "Payload builder with PQ-auth verification" },
+  { key: "atqm-txpool", value: "Transaction pool tuned for PQ signature sizes" },
 ];
 
 export const CONSENSUS = {
@@ -136,7 +288,7 @@ export const PRIMITIVES = {
     { layer: "Validator consensus signatures", primitive: "ML-DSA", status: "no BLS, no aggregation" },
     { layer: "Transport key exchange", primitive: "ML-KEM-768", status: "all node-to-node transport" },
     { layer: "Transport AEAD", primitive: "AES-GCM", status: "replay protection + epoch rekeying" },
-    { layer: "Node identity", primitive: "ML-DSA + ML-KEM keys", status: "bound in ArethNodeId" },
+    { layer: "Node identity", primitive: "ML-DSA + ML-KEM keys", status: "bound in ATQMNodeId" },
   ],
   standards: [
     { name: "ML-KEM-768", fips: "FIPS 203", final: true, note: "All key exchange. Formerly CRYSTALS-Kyber." },
@@ -147,7 +299,7 @@ export const PRIMITIVES = {
 
 export const TRANSACTIONS = {
   intro:
-    "Same EVM. Different signature. Cleaner surface. A Solidity contract that compiled and ran on Ethereum compiles and runs on Areth — only the signing layer underneath changed.",
+    "Same EVM. Different signature. Cleaner surface. A Solidity contract that compiled and ran on Ethereum compiles and runs on ATQM — only the signing layer underneath changed.",
   features: [
     { title: "EVM-compatible", body: "Nonce, chain id, gas, EIP-1559 fees, access lists, EIP-2718 envelopes, RLP. Solidity tooling carries over." },
     { title: "PQ-derived sender", body: "Addresses come from keccak(domain ‖ prefixed_key)[12..] — not secp256k1 recovery. Still 20 bytes, still EVM-native." },
@@ -160,7 +312,7 @@ export const TRANSACTIONS = {
     { algo: "ML-DSA-65", sig: "3,309 B" },
   ],
   sizeNote:
-    "PQ signatures are ~10–50× larger than ECDSA — which is exactly why areth-txpool is tuned for PQ signature sizes. Contract-level EVM compatibility is preserved, but transaction economics (calldata, bandwidth, storage) change.",
+    "PQ signatures are ~10–50× larger than ECDSA — which is exactly why atqm-txpool is tuned for PQ signature sizes. Contract-level EVM compatibility is preserved, but transaction economics (calldata, bandwidth, storage) change.",
 };
 
 export const PERFORMANCE = {
@@ -179,8 +331,8 @@ export const EXPANSION = {
   intro:
     "A post-quantum blockchain is not post-quantum protection for everything. The honest move is to ship four independently sellable modules for four different jobs — segmentation that survives due diligence.",
   modules: [
-    { id: "M1", name: "Areth Chain (L1)", body: "PQ-EVM network: ML-DSA/FN-DSA tx signatures, ML-KEM-768 transport, HotStuff finality, 20-byte addresses, threshold-of-N, finality-gated RPC.", maturity: "Testnet → mainnet after external audit." },
-    { id: "M2", name: "Areth PQ-SDK", body: "The areth-crypto crate productized: ML-DSA, FN-DSA, ML-KEM, keystores, threshold signing — embeddable in other systems. We compete on integration, not uniqueness.", maturity: "Eval-SDK now, after a crate audit." },
+    { id: "M1", name: "ATQM Chain (L1)", body: "PQ-EVM network: ML-DSA/FN-DSA tx signatures, ML-KEM-768 transport, HotStuff finality, 20-byte addresses, threshold-of-N, finality-gated RPC.", maturity: "Testnet → mainnet after external audit." },
+    { id: "M2", name: "ATQM PQ-SDK", body: "The atqm-crypto crate productized: ML-DSA, FN-DSA, ML-KEM, keystores, threshold signing — embeddable in other systems. We compete on integration, not uniqueness.", maturity: "Eval-SDK now, after a crate audit." },
     { id: "M3", name: "Anchoring & Notary", body: "PQ-signed proof of time plus hash/attestation anchoring into a finalized block. Data stays off-chain — only the cryptographic commitment is on-chain. The engine of expansion.", maturity: "PoC now; service after mainnet." },
     { id: "M4", name: "PQ Wallet & Identity", body: "Mobile (Secure Enclave / StrongBox) and browser wallet, threshold accounts, a base for DID / verifiable credentials.", maturity: "Beta now." },
   ],
@@ -196,7 +348,7 @@ export const EXPANSION = {
 
 export const ROADMAP = {
   steps: [
-    { phase: "Areth crate development", when: "Q1–Q2 2026", status: "Done" },
+    { phase: "ATQM crate development", when: "Q1–Q2 2026", status: "Done" },
     { phase: "Smoke runs — 300+ blocks, 4 validators", when: "Q1 2026", status: "Done (code-correctness signal)" },
     { phase: "Production-scale testing — 50+ validators", when: "—", status: "Upcoming" },
     { phase: "Testnet", when: "June 2026", status: "Launch" },
@@ -206,14 +358,14 @@ export const ROADMAP = {
   ],
   wallets: [
     { platform: "iOS & Android", body: "FaceID / fingerprint unlocks a Secure Enclave / StrongBox-isolated worker. The PQ key never leaves cleartext." },
-    { platform: "Browser extension", body: "MetaMask-shaped EIP-1193 provider plus a native areth_* surface for PQ signing and order types." },
+    { platform: "Browser extension", body: "MetaMask-shaped EIP-1193 provider plus a native atqm_* surface for PQ signing and order types." },
     { platform: "Hardware path", body: "Paired-mobile QR handoff today; native ML-DSA firmware on Ledger / Trezor when vendors ship it." },
   ],
 };
 
 export const PITCH = {
   quote:
-    "Areth is what Ethereum's execution stack would look like if you replaced every signature, key exchange, and consensus message with NIST-standardized post-quantum primitives — and bolted it onto HotStuff finality instead of Gasper — without throwing away a decade of Reth engineering.",
+    "ATQM is what Ethereum's execution stack would look like if you replaced every signature, key exchange, and consensus message with NIST-standardized post-quantum primitives — and bolted it onto HotStuff finality instead of Gasper — without throwing away a decade of Reth engineering.",
   tagline: "EVM where it counts. New cryptography everywhere else.",
-  domain: "areth.network",
+  domain: "atqm.network",
 };

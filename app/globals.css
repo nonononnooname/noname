@@ -127,3 +127,11 @@
 @utility glow-yellow {
   box-shadow: var(--glow-yellow);
 }
+
+/* SMIL animations don't honor prefers-reduced-motion natively — hide the
+   moving ecosystem-orbit elements so reduced-motion users get a static diagram. */
+@media (prefers-reduced-motion: reduce) {
+  .orbit-motion {
+    display: none;
+  }
+}

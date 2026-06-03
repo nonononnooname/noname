@@ -196,7 +196,7 @@ export function TopoHero() {
 
         {/* Interface grid */}
         <div className="ah-grid">
-          <div className="ah-tag">ATQM // ARETH</div>
+          <div className="ah-tag">ATOM QUANTUM</div>
           <div className="ah-readout">
             <div>{HERO.primitives.join(" · ")}</div>
             <div>FINALITY &lt; 1.0 s</div>
